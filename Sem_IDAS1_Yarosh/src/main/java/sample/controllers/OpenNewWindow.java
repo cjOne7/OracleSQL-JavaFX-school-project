@@ -10,8 +10,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.sql.Statement;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,28 +32,32 @@ public final class OpenNewWindow {
         try {
             final Stage stage = new Stage();
             final Parent root = FXMLLoader.load(cl.getResource(fxmlFile));
-            stage.setScene(new Scene(root));
-
-            stage.setOnCloseRequest((event) -> {
-                final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Exiting");
-                alert.setHeaderText(null);
-                alert.setContentText("Are you sure that you want to close this window?");
-                Optional<ButtonType> op = alert.showAndWait();
-                if (op.get().equals(ButtonType.OK)) {
-                    stage.close();
-                } else {
-                    event.consume();
-                }
-            });
-            stage.initStyle(StageStyle.DECORATED);
-            stage.setResizable(resizable);
-            stage.setTitle(title);
-            stage.getIcons().add(iconImage);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
+            configureStage(stage, root, title, resizable, iconImage);
         } catch (IOException ex) {
             Logger.getLogger(cl.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private static void configureStage(@NotNull final Stage stage, final Parent root, final String title, final boolean resizable, final Image iconImage){
+        stage.setScene(new Scene(root));
+
+        stage.setOnCloseRequest((event) -> {
+            final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Exiting");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure that you want to close this window?");
+            Optional<ButtonType> op = alert.showAndWait();
+            if (op.get().equals(ButtonType.OK)) {
+                stage.close();
+            } else {
+                event.consume();
+            }
+        });
+        stage.initStyle(StageStyle.DECORATED);
+        stage.setResizable(resizable);
+        stage.setTitle(title);
+        stage.getIcons().add(iconImage);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 }

@@ -168,27 +168,27 @@
             </FlowPane>
          </children>
       </GridPane>
-      <Button layoutX="746.0" layoutY="160.0" mnemonicParsing="false" onAction="#loadImage" prefHeight="26.0" prefWidth="123.0" text="Load image">
+      <Button fx:id="loadImageBtn" layoutX="735.0" layoutY="161.0" mnemonicParsing="false" onAction="#loadImage" prefHeight="28.0" prefWidth="142.0" text="Load image">
          <font>
             <Font name="Castellar" size="13.0" />
          </font>
       </Button>
-      <ImageView fx:id="imageView" fitHeight="118.0" fitWidth="132.0" layoutX="742.0" layoutY="33.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imageView" fitHeight="128.0" fitWidth="149.0" layoutX="742.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/user_icon.png" />
          </image>
       </ImageView>
-      <Button fx:id="registerBtn" layoutX="673.0" layoutY="495.0" mnemonicParsing="false" onAction="#registerNewUser" prefHeight="28.0" prefWidth="100.0" text="finish">
+      <Button fx:id="finishEditingBtn" layoutX="673.0" layoutY="495.0" mnemonicParsing="false" onAction="#updateUsersData" prefHeight="28.0" prefWidth="100.0" text="finish">
          <font>
             <Font name="Castellar" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="789.0" layoutY="495.0" mnemonicParsing="false" onAction="#cancelRegistration" prefHeight="26.0" prefWidth="100.0" text="Cancel">
+      <Button fx:id="cancelBtn" layoutX="789.0" layoutY="495.0" mnemonicParsing="false" onAction="#cancelEditing" prefHeight="26.0" prefWidth="100.0" text="Cancel">
          <font>
             <Font name="Castellar" size="13.0" />
          </font>
       </Button>
-      <GridPane layoutX="584.0" layoutY="277.0" prefHeight="155.0" prefWidth="378.0">
+      <GridPane layoutX="570.0" layoutY="277.0" prefHeight="155.0" prefWidth="378.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="217.0" minWidth="10.0" prefWidth="217.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="184.2000732421875" minWidth="10.0" prefWidth="161.0" />
@@ -237,25 +237,30 @@
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>
-                  <PasswordField />
+                  <PasswordField fx:id="oldPasswordField" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <PasswordField />
+                  <PasswordField fx:id="reenteredPasswordField" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <PasswordField />
+                  <PasswordField fx:id="newPasswordField" />
                </children>
             </FlowPane>
          </children>
       </GridPane>
-      <Button layoutX="673.0" layoutY="439.0" mnemonicParsing="false" prefHeight="28.0" prefWidth="218.0" text="Change password">
+      <Button fx:id="changePasswordBtn" layoutX="673.0" layoutY="439.0" mnemonicParsing="false" onAction="#changePassword" prefHeight="28.0" prefWidth="218.0" text="Change password">
          <font>
             <Font name="Castellar" size="13.0" />
          </font>
       </Button>
+      <Label layoutX="604.0" layoutY="220.0" prefHeight="26.0" prefWidth="310.0">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

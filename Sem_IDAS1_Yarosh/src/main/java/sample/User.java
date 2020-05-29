@@ -57,6 +57,8 @@ public class User {
         return roleId;
     }
 
+    public String getPassword() { return password; }
+
     public void setRoleId(final int roleId) {
         this.roleId = roleId;
     }

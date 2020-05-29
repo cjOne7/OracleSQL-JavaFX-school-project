@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import sample.DatabaseManagement.DbManager;
-import sample.Role;
+import sample.Enums.Role;
 import sample.Shake;
 
 import java.net.URL;
@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
 
-    public static int role_id;
+    public static int userID;
 
     @FXML
     private Button singUpBtn;
@@ -53,7 +53,7 @@ public class MainWindowController implements Initializable {
         } else {
             final String login = loginTextField.getText().trim();
             final String password = passwordField.getText();
-            final String query = "select ST58310.ELSA_USER.LOGIN, ST58310.ELSA_USER.PASSWORD, ST58310.ELSA_USER.ROLE_ID from st58310.ELSA_USER where LOGIN like ? and PASSWORD like ?";
+            final String query = "select ST58310.ELSA_USER.LOGIN, ST58310.ELSA_USER.PASSWORD, ST58310.ELSA_USER.ROLE_ID, ST58310.ELSA_USER.USER_ID from st58310.ELSA_USER where LOGIN like ? and PASSWORD like ?";
             try {
                 final DbManager dbManager = new DbManager();
                 final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(query);
@@ -61,8 +61,9 @@ public class MainWindowController implements Initializable {
                 preparedStatement.setString(2, password);
                 final ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    role_id = resultSet.getInt("ROLE_ID");
-                    switch (Role.getRole(role_id)) {
+                    userID = resultSet.getInt("USER_ID");
+                    int roleId = resultSet.getInt("ROLE_ID");
+                    switch (Role.getRole(roleId)) {
                         case NEW:
                             break;
                         case STUDENT:

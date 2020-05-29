@@ -15,7 +15,7 @@ import java.util.Optional;
 public class Main extends Application {
 
     @Override
-    public void start(final Stage primaryStage) throws Exception {
+    public void start(@NotNull final Stage primaryStage) throws Exception {
         final Parent root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
         primaryStage.setTitle("ELSA");
 

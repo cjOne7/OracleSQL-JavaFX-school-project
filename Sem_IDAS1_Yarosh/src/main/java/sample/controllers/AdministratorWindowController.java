@@ -16,7 +16,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import sample.DatabaseManagement.DbManager;
-import sample.Role;
+import sample.Enums.ElsaUserFields;
+import sample.Enums.Role;
 import sample.User;
 
 public class AdministratorWindowController implements Initializable {
@@ -24,6 +25,8 @@ public class AdministratorWindowController implements Initializable {
     private final DbManager dbManager = new DbManager();
     private final ObservableList<User> users = FXCollections.observableArrayList();
     private ObservableList<User> sortedList = FXCollections.observableArrayList();
+
+    private int roleID;
 
     @FXML
     private ComboBox<Role> roleFilterComboBox;
@@ -42,15 +45,24 @@ public class AdministratorWindowController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         listViewWithNewUsers.setItems(users);
 
-        String selectQuery = "";
+        String selectQuery = "SELECT ROLE_ID from ST58310.ELSA_USER where USER_ID = ?";
+        try {
+            final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
+            preparedStatement.setInt(1, MainWindowController.userID);
+            final ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                roleID = resultSet.getInt(ElsaUserFields.ROLE_ID.toString());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        if (MainWindowController.role_id == Role.ADMINISTRATOR.getIndex()) {
+        if (roleID == Role.ADMINISTRATOR.getIndex()) {
             fillComboBoxes(Role.ADMINISTRATOR, roleFilterComboBox, roleChangerComboBox);
-            selectQuery = String.format("select NAME, SURNAME, EMAIL, TELEPHONE, LOGIN, ROLE_ID from ST58310.ELSA_USER where ROLE_ID < %d", Role.MAIN_ADMIN.getIndex());
-
-        } else if (MainWindowController.role_id == Role.MAIN_ADMIN.getIndex()) {
+            selectQuery = String.format("SELECT NAME, SURNAME, EMAIL, TELEPHONE, LOGIN, ROLE_ID from ST58310.ELSA_USER where ROLE_ID < %d", Role.MAIN_ADMIN.getIndex());
+        } else if (roleID == Role.MAIN_ADMIN.getIndex()) {
             fillComboBoxes(Role.MAIN_ADMIN, roleFilterComboBox, roleChangerComboBox);
-            selectQuery = "select NAME, SURNAME, EMAIL, TELEPHONE, LOGIN, ROLE_ID from ST58310.ELSA_USER";
+            selectQuery = "SELECT NAME, SURNAME, EMAIL, TELEPHONE, LOGIN, ROLE_ID from ST58310.ELSA_USER";
         }
 
         roleFilterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -58,7 +70,8 @@ public class AdministratorWindowController implements Initializable {
                     .filter(user -> newValue.getIndex() == user.getRoleId())
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
             listViewWithNewUsers.setItems(sortedList);
-            if (MainWindowController.role_id == roleFilterComboBox.getValue().getIndex()) {
+
+            if (roleID == roleFilterComboBox.getValue().getIndex()) {
                 changeDisable(true);
             } else {
                 changeDisable(false);
@@ -80,12 +93,12 @@ public class AdministratorWindowController implements Initializable {
             final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             final ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                final String name = resultSet.getString("NAME");
-                final String surname = resultSet.getString("SURNAME");
-                final String email = resultSet.getString("EMAIL");
-                final String telephone = resultSet.getString("TELEPHONE");
-                final String login = resultSet.getString("LOGIN");
-                final int role = resultSet.getInt("ROLE_ID");
+                final String name = resultSet.getString(ElsaUserFields.NAME.toString());
+                final String surname = resultSet.getString(ElsaUserFields.SURNAME.toString());
+                final String email = resultSet.getString(ElsaUserFields.EMAIL.toString());
+                final String telephone = resultSet.getString(ElsaUserFields.TELEPHONE.toString());
+                final String login = resultSet.getString(ElsaUserFields.LOGIN.toString());
+                final int role = resultSet.getInt(ElsaUserFields.ROLE_ID.toString());
                 final User newUser = new User(name, surname, email, telephone, login, role);
                 users.add(newUser);
             }
@@ -136,7 +149,6 @@ public class AdministratorWindowController implements Initializable {
     @FXML
     private void openProfile(ActionEvent event) {
         OpenNewWindow.openNewWindow("/UserProfileWindow.fxml", getClass(), false, "Profile window", new Image("/images/profile_icon.png"));
-
     }
 
     @FXML

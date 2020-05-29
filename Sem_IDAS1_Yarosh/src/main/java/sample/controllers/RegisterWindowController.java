@@ -1,21 +1,18 @@
 package sample.controllers;
 
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import sample.*;
 import sample.DatabaseManagement.DbManager;
-import sample.Role;
-import sample.Shake;
+import sample.Enums.ElsaUserFields;
+import sample.Enums.Role;
 
 import java.io.*;
 import java.net.URL;
@@ -25,28 +22,14 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RegisterWindowController implements Initializable {
-
-    private static final int NAME = 1;
-    private static final int SURNAME = 2;
-    private static final int LOGIN = 3;
-    private static final int PASSWORD = 4;
-    private static final int E_MAIL = 5;
-    private static final int TELEPHONE = 6;
-    private static final int ABOUT = 7;
-    private static final int IMAGE = 8;
-    private static final int USER_STATUS = 9;
 
     private static final String EXECUTE_QUERY = "INSERT into ST58310.ELSA_USER " +
             "(name, surname, login, password, email, telephone, about, image, role_id) " +
             "values (?,?,?,?,?,?,?,?,?)";
 
-    private Image image;
     private File file;
 
     private List<TextField> textFieldList;
@@ -54,8 +37,6 @@ public class RegisterWindowController implements Initializable {
     private PreparedStatement preparedStatement;
 
     private String prevLogin;
-
-    private ObservableList<String> countryCodes;
 
     @FXML
     private TextField nameField;
@@ -85,10 +66,12 @@ public class RegisterWindowController implements Initializable {
     private Label messageLabel;
     @FXML
     private Label comparePasswordsLabel;
+    @FXML
+    private Button loadImageBtn;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        textFieldList = fillList();
+        textFieldList = fillListByTextFields();
         firstPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
             changePasswordsLabel(secondPasswordField.getText(), newValue, Color.RED);
             cutSpace(firstPasswordField, newValue, Color.RED);
@@ -102,20 +85,14 @@ public class RegisterWindowController implements Initializable {
         surnameField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, surnameField, ""));
         emailField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, emailField, ""));
 
-        countryCodes = Stream.of(Locale.getISOCountries())
-                .map(locales -> new Locale("", locales).getCountry())
-                .filter(countryCode -> getPhoneCountyCode(countryCode) != 0)
-                .map(countryCode -> String.format("%s +%d", countryCode, getPhoneCountyCode(countryCode)))
-                .collect(Collectors.toCollection(FXCollections::observableArrayList));
-        //Запускаем стрим на все доступные страны
-        //возвращаем код страны
-        //нужна проверка, потому что если нет в базе присоеденённой библиотеки кода страны, то вернёт 0
-        //собираем строку вида АБ +123
-        //возвращаем нужный объект
-
+        final ObservableList<String> countryCodes = CountryCodePicker.getCountryCodes();
         countryCodePicker.setItems(countryCodes);
         countryCodePicker.setValue(countryCodes.get(0));
 
+        example();
+    }
+
+    private void example() {
         nameField.setText("Nikita");
         surnameField.setText("Yarosh");
         loginField.setText("cj_one");
@@ -124,10 +101,6 @@ public class RegisterWindowController implements Initializable {
         emailField.setText("nik_yar@gmail.com");
         aboutYourselfTextArea.setText("Hi! My name is Nikita.");
         telephoneField.setText("773089030");
-    }
-
-    private int getPhoneCountyCode(final String countryCode) {
-        return PhoneNumberUtil.getInstance().getCountryCodeForRegion(countryCode);
     }
 
     private void cutSpace(final TextField textField, @NotNull final String text, final Color textColor) {
@@ -164,19 +137,6 @@ public class RegisterWindowController implements Initializable {
     }
 
     @FXML
-    private void loadImage(ActionEvent event) {
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("JPG, JPEG, PNG", "*.jpg", "*.jpeg", "*.png"));
-        file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            image = new Image(file.toURI().toString());
-            imageView.setImage(image);
-            imageView.setPreserveRatio(false);
-        }
-    }
-
-    @FXML
     void cancelRegistration(ActionEvent event) {
         closeWindow();
     }
@@ -196,30 +156,15 @@ public class RegisterWindowController implements Initializable {
                     }
                 }
                 changeLabelAttributes(messageLabel, "Fields with * have to be filled!", Color.RED);
-//----альтернативный варант проверки и тряски незаполненных полей при условии, что в resultList нет проверки на второе парольное поле----
-//                for (int i = 0; i < resultList.size(); i++) {
-//                    if (resultList.get(i)) {
-//                        if (i == 3) {
-//                            shakeTextField(i);
-//                            shakeTextField(i + 1);
-//                        } else if (i > 3) {
-//                            shakeTextField(i + 1);
-//                        } else {
-//                            shakeTextField(i);
-//                        }
-//                    }
-//                }
-//                changeLabelAttributes(messageLabel, "Fields with * have to be filled!", Color.RED)
-//----------------------------------------------------------------------------------------------------------------------
             } else {
                 if (checkLoginForUnique()) {
-                    preparedStatement.setString(NAME, nameField.getText().trim());
-                    preparedStatement.setString(SURNAME, surnameField.getText().trim());
-                    preparedStatement.setString(LOGIN, loginField.getText().trim());
-                    preparedStatement.setString(PASSWORD, firstPasswordField.getText().trim());
-                    preparedStatement.setString(E_MAIL, emailField.getText().trim());
-                    preparedStatement.setInt(USER_STATUS, Role.NEW.getIndex());
-                    checkNullPossibleFields(preparedStatement);
+                    preparedStatement.setString(ElsaUserFields.NAME.getColumnIndex(), nameField.getText().trim());
+                    preparedStatement.setString(ElsaUserFields.SURNAME.getColumnIndex(), surnameField.getText().trim());
+                    preparedStatement.setString(ElsaUserFields.LOGIN.getColumnIndex(), loginField.getText().trim());
+                    preparedStatement.setString(ElsaUserFields.PASSWORD.getColumnIndex(), firstPasswordField.getText().trim());
+                    preparedStatement.setString(ElsaUserFields.EMAIL.getColumnIndex(), emailField.getText().trim());
+                    preparedStatement.setInt(ElsaUserFields.ROLE_ID.getColumnIndex(), Role.NEW.getIndex());
+                    checkNullPossibleFields();
                     preparedStatement.execute();
                     closeWindow();
                 }
@@ -239,8 +184,8 @@ public class RegisterWindowController implements Initializable {
         final ResultSet loginFields = checkSelection.executeQuery();
         if (loginFields.next()) {
             changeLabelAttributes(messageLabel, "Login must be unique!", Color.RED);
-            textFieldList.get(LOGIN - 1).setStyle("-fx-border-color: red; -fx-border-radius: 5;");
-            shake(LOGIN - 1);
+            textFieldList.get(ElsaUserFields.LOGIN.getColumnIndex() - 1).setStyle("-fx-border-color: red; -fx-border-radius: 5;");
+            shake(ElsaUserFields.LOGIN.getColumnIndex() - 1);
             return false;
         } else {
             return true;
@@ -256,14 +201,6 @@ public class RegisterWindowController implements Initializable {
         final Stage currentStage = (Stage) registerBtn.getScene().getWindow();
         currentStage.close();
     }
-//--------------метод для использования в методе registerNewUser при использовании альтернативной проверки--------------
-//    private void shakeTextField(final int index) {
-//        if (index >= 0) {
-//            final Shake shake = new Shake(textFieldList.get(index));
-//            shake.getTranslateTransition().playFromStart();
-//            textFieldList.get(index).setStyle("-fx-border-color: red; -fx-border-radius: 5;");
-//        }
-//    }
 
     @FXML
     private void emailAsLogin(ActionEvent actionEvent) {
@@ -278,25 +215,40 @@ public class RegisterWindowController implements Initializable {
         this.prevLogin = prevLogin;
     }
 
-    private void checkNullPossibleFields(final PreparedStatement preparedStatement) throws SQLException, FileNotFoundException {
-        if (checkTelephoneField()) {// check phone field
-            preparedStatement.setNull(TELEPHONE, Types.NULL);
+    @FXML
+    private void loadImage(ActionEvent event) {
+        file = ImageManager.loadImage(imageView, loadImageBtn);
+    }
+
+    private void checkNullPossibleFields() throws SQLException, FileNotFoundException {
+        checkTelephoneField(checkTelephoneField());
+        checkAboutField(checkAboutField());
+        checkImage(checkFileWithImage());
+    }
+
+    private void checkTelephoneField(final boolean state) throws SQLException {
+        if (state) {// check phone field
+            preparedStatement.setNull(ElsaUserFields.TELEPHONE.getColumnIndex(), Types.NULL);
         } else {
-            String countryCode = countryCodePicker.getValue();
-            final int index = countryCode.indexOf("+");
-            countryCode = countryCode.substring(index);
-            preparedStatement.setString(TELEPHONE, countryCode.concat(telephoneField.getText().trim()));
+            final String countryCode = countryCodePicker.getValue();
+            preparedStatement.setString(ElsaUserFields.TELEPHONE.getColumnIndex(), countryCode.concat(telephoneField.getText().trim()));
         }
-        if (checkAboutField()) {//check about field
-            preparedStatement.setNull(ABOUT, Types.NULL);
+    }
+
+    private void checkAboutField(final boolean state) throws SQLException {
+        if (state) {//check about field
+            preparedStatement.setNull(ElsaUserFields.ABOUT.getColumnIndex(), Types.NULL);
         } else {
-            preparedStatement.setString(ABOUT, aboutYourselfTextArea.getText().trim());
+            preparedStatement.setString(ElsaUserFields.ABOUT.getColumnIndex(), aboutYourselfTextArea.getText().trim());
         }
-        if (checkImage()) {// check image field
-            preparedStatement.setNull(IMAGE, Types.NULL);
+    }
+
+    private void checkImage(final boolean state) throws SQLException, FileNotFoundException {
+        if (state) {// check image field
+            preparedStatement.setNull(ElsaUserFields.IMAGE.getColumnIndex(), Types.NULL);
         } else {
             final InputStream fileInputStream = new FileInputStream(file);
-            preparedStatement.setBlob(IMAGE, fileInputStream, file.length());
+            preparedStatement.setBlob(ElsaUserFields.IMAGE.getColumnIndex(), fileInputStream, file.length());
         }
     }
 
@@ -313,7 +265,7 @@ public class RegisterWindowController implements Initializable {
     }
 
     @NotNull
-    private List<TextField> fillList() {
+    private List<TextField> fillListByTextFields() {
         final List<TextField> textFields = new ArrayList<>();
         textFields.add(nameField);//0
         textFields.add(surnameField);//1
@@ -357,7 +309,7 @@ public class RegisterWindowController implements Initializable {
         return aboutYourselfTextArea.getText().trim().isEmpty();
     }
 
-    private boolean checkImage() {
-        return image == null;
+    private boolean checkFileWithImage() {
+        return file == null;
     }
 }
