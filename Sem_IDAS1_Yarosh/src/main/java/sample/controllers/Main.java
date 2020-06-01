@@ -16,15 +16,11 @@ public class Main extends Application {
 
     @Override
     public void start(@NotNull final Stage primaryStage) throws Exception {
-        final Parent root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
+        final Parent root = FXMLLoader.load(getClass().getResource("/fxmlfiles/MainWindow.fxml"));
         primaryStage.setTitle("ELSA");
 
         primaryStage.setOnCloseRequest((event) -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Exiting window");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure that you want to close app?");
-            Optional<ButtonType> op = alert.showAndWait();
+            final Optional<ButtonType> op = callAlertWindow("Exiting window", "Are you sure that you want to close app?", Alert.AlertType.CONFIRMATION, "/images/exit_icon.png");
             if (op.get().equals(ButtonType.OK)) {
                 primaryStage.close();
             } else {
@@ -37,18 +33,22 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {launch(args);}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @NotNull
-    public static Alert callAlertWindow(
+    public static Optional<ButtonType> callAlertWindow(
             final String titleText,
             final String contextText,
-            final Alert.AlertType alertType) {
+            final Alert.AlertType alertType,
+            final String url) {
         final Alert alert = new Alert(alertType);
         alert.setTitle(titleText);
         alert.setHeaderText(null);
         alert.setContentText(contextText);
-        alert.showAndWait();
-        return alert;
+        final Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(url));
+        return alert.showAndWait();
     }
 }

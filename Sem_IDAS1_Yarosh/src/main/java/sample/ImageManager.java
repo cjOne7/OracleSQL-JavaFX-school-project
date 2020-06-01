@@ -1,42 +1,73 @@
 package sample;
 
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
+import java.io.*;
+import java.sql.Blob;
+import java.sql.SQLException;
 
-public class ImageManager {
+public final class ImageManager {
+
+    private static final int IMAGE_VIEW_FIT_WIDTH = 150;
+    private static final int IMAGE_VIEW_FIT_HEIGHT = 125;
+
+    private static final int LAYOUT_X_OF_LOAD_BTN = 735;
+    private static final int LAYOUT_Y_OF_LOAD_BTN = 160;
+    private static final int WIDTH_OF_LOAD_BTN = 140;
+
+    private ImageManager() {
+    }
 
     @Nullable
-    public static File loadImage(final ImageView imageView, final Button loadImageBtn) {
+    public static File loadImage(final ImageView imageView) {
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JPG, JPEG, PNG", "*.jpg", "*.jpeg", "*.png"));
         final File file = fileChooser.showOpenDialog(null);
         if (file != null) {
-           final  Image image = new Image(file.toURI().toString());
-            imageView.setImage(image);
-            double rootWidth = imageView.getFitWidth();
-            double rootHeight = imageView.getFitHeight();
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
-            double ratioX = rootWidth / imageWidth;
-            double ratioY = rootHeight / imageHeight;
-            double ratio = Math.min(ratioX, ratioY);
-            imageView.setPreserveRatio(false);
-            double width = ratio * imageWidth;
-            double height = ratio * imageHeight;
-            imageView.setFitWidth(width);
-            imageView.setFitHeight(height);
-
-            imageView.setLayoutX(loadImageBtn.getLayoutX() + (loadImageBtn.getWidth() - imageView.getFitWidth()) / 2);
-            imageView.setLayoutY(loadImageBtn.getLayoutY() - imageView.getFitHeight() - 10);
+            scaleImage(imageView, file);
             return file;
         } else {
             return null;
         }
+    }
+
+    public static File loadImage(final Blob blob, final ImageView imageView) throws SQLException, IOException {
+        if (blob != null) {
+            final InputStream input = blob.getBinaryStream();
+            final File file = new File("image.png");
+            final FileOutputStream fos = new FileOutputStream(file);
+            final byte[] buffer = new byte[1024];
+            while (input.read(buffer) > 0) {
+                fos.write(buffer);
+            }
+            scaleImage(imageView, file);
+            return file;
+        } else {
+            return null;
+        }
+    }
+
+    private static void scaleImage(@NotNull final ImageView imageView, @NotNull final File file) {
+        final Image image = new Image(file.toURI().toString());
+        imageView.setImage(new Image(file.toURI().toString()));
+        final double rootWidth = IMAGE_VIEW_FIT_WIDTH;
+        final double rootHeight = IMAGE_VIEW_FIT_HEIGHT;
+        final double imageWidth = image.getWidth();
+        final double imageHeight = image.getHeight();
+        final double ratioX = rootWidth / imageWidth;
+        final double ratioY = rootHeight / imageHeight;
+        final double ratio = Math.min(ratioX, ratioY);
+        imageView.setPreserveRatio(false);
+        final double width = ratio * imageWidth;
+        final double height = ratio * imageHeight;
+        imageView.setFitWidth(width);
+        imageView.setFitHeight(height);
+        imageView.setLayoutX(LAYOUT_X_OF_LOAD_BTN + (WIDTH_OF_LOAD_BTN - imageView.getFitWidth()) / 2);
+        imageView.setLayoutY(LAYOUT_Y_OF_LOAD_BTN - imageView.getFitHeight() - 10);
     }
 }

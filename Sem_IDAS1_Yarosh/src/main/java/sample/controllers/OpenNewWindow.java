@@ -38,7 +38,7 @@ public final class OpenNewWindow {
         }
     }
 
-    private static void configureStage(@NotNull final Stage stage, final Parent root, final String title, final boolean resizable, final Image iconImage){
+    private static void configureStage(@NotNull final Stage stage, final Parent root, final String title, final boolean resizable, final Image iconImage) {
         stage.setScene(new Scene(root));
 
         stage.setOnCloseRequest((event) -> {
@@ -46,7 +46,9 @@ public final class OpenNewWindow {
             alert.setTitle("Exiting");
             alert.setHeaderText(null);
             alert.setContentText("Are you sure that you want to close this window?");
-            Optional<ButtonType> op = alert.showAndWait();
+            final Stage stage1 = (Stage) alert.getDialogPane().getScene().getWindow();
+            stage1.getIcons().add(new Image("/images/exit_icon.png"));
+            final Optional<ButtonType> op = alert.showAndWait();
             if (op.get().equals(ButtonType.OK)) {
                 stage.close();
             } else {

@@ -1,6 +1,5 @@
 package sample.controllers;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,9 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import sample.*;
-import sample.DatabaseManagement.DbManager;
-import sample.Enums.ElsaUserFields;
-import sample.Enums.Role;
+import sample.databasemanager.DbManager;
+import sample.enums.ElsaUserColumns;
+import sample.enums.Role;
+import sample.enums.StylesEnum;
 
 import java.io.*;
 import java.net.URL;
@@ -66,12 +66,10 @@ public class RegisterWindowController implements Initializable {
     private Label messageLabel;
     @FXML
     private Label comparePasswordsLabel;
-    @FXML
-    private Button loadImageBtn;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        textFieldList = fillListByTextFields();
+        textFieldList = fillListByNotNullTextFields();
         firstPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
             changePasswordsLabel(secondPasswordField.getText(), newValue, Color.RED);
             cutSpace(firstPasswordField, newValue, Color.RED);
@@ -80,14 +78,23 @@ public class RegisterWindowController implements Initializable {
             changePasswordsLabel(firstPasswordField.getText(), newValue, Color.RED);
             cutSpace(secondPasswordField, newValue, Color.RED);
         });
-        loginField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, loginField, ""));
-        nameField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, nameField, ""));
-        surnameField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, surnameField, ""));
-        emailField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, emailField, ""));
+        loginField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, loginField, StylesEnum.EMPTY_STRING.getStyle()));
+        nameField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, nameField, StylesEnum.EMPTY_STRING.getStyle()));
+        surnameField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, surnameField, StylesEnum.EMPTY_STRING.getStyle()));
+        emailField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, emailField, StylesEnum.EMPTY_STRING.getStyle()));
+        telephoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (!newValue.isEmpty()) {
+                    Integer.parseInt(newValue);
+                }
+            } catch (NumberFormatException e) {
+                telephoneField.setText(oldValue);
+            }
+        });
 
-        final ObservableList<String> countryCodes = CountryCodePicker.getCountryCodes();
-        countryCodePicker.setItems(countryCodes);
-        countryCodePicker.setValue(countryCodes.get(0));
+        countryCodePicker.setStyle(StylesEnum.COMBO_BOX_STYLE.getStyle());
+        countryCodePicker.setItems(CountryCodePicker.getCountryCodes());
+        countryCodePicker.setValue(CountryCodePicker.getCountryCodes().get(0));
 
         example();
     }
@@ -105,7 +112,7 @@ public class RegisterWindowController implements Initializable {
 
     private void cutSpace(final TextField textField, @NotNull final String text, final Color textColor) {
         if (text.contains(" ")) {
-            final String result = text.replace(" ", "");
+            final String result = text.replace(" ", StylesEnum.EMPTY_STRING.getStyle());
             textField.setText(result);
             changeLabelAttributes(comparePasswordsLabel, "Spaces in password are forbidden.", textColor);
         }
@@ -115,8 +122,8 @@ public class RegisterWindowController implements Initializable {
         if (!newValue.equals(password)) {
             changeLabelAttributes(comparePasswordsLabel, "Passwords have to match!", textColor);
         } else {
-            changeLabelAttributes(comparePasswordsLabel, "", Color.TRANSPARENT);
-            changePasswordFieldsStyle("");
+            changeLabelAttributes(comparePasswordsLabel, StylesEnum.EMPTY_STRING.getStyle(), Color.TRANSPARENT);
+            changePasswordFieldsStyle(StylesEnum.EMPTY_STRING.getStyle());
         }
     }
 
@@ -151,27 +158,25 @@ public class RegisterWindowController implements Initializable {
             if (resultList.contains(true)) {//если хоть одно обязательное поле пустое
                 for (int i = 0; i < textFieldList.size(); i++) {
                     if (resultList.get(i)) {
-                        shake(i);
-                        textFieldList.get(i).setStyle("-fx-border-color: red; -fx-border-radius: 5;");
+                        Shake.shake(textFieldList.get(i));
+                        textFieldList.get(i).setStyle(StylesEnum.ERROR_STYLE.getStyle());
                     }
                 }
                 changeLabelAttributes(messageLabel, "Fields with * have to be filled!", Color.RED);
             } else {
                 if (checkLoginForUnique()) {
-                    preparedStatement.setString(ElsaUserFields.NAME.getColumnIndex(), nameField.getText().trim());
-                    preparedStatement.setString(ElsaUserFields.SURNAME.getColumnIndex(), surnameField.getText().trim());
-                    preparedStatement.setString(ElsaUserFields.LOGIN.getColumnIndex(), loginField.getText().trim());
-                    preparedStatement.setString(ElsaUserFields.PASSWORD.getColumnIndex(), firstPasswordField.getText().trim());
-                    preparedStatement.setString(ElsaUserFields.EMAIL.getColumnIndex(), emailField.getText().trim());
-                    preparedStatement.setInt(ElsaUserFields.ROLE_ID.getColumnIndex(), Role.NEW.getIndex());
+                    preparedStatement.setString(ElsaUserColumns.NAME.getColumnIndex(), nameField.getText().trim());
+                    preparedStatement.setString(ElsaUserColumns.SURNAME.getColumnIndex(), surnameField.getText().trim());
+                    preparedStatement.setString(ElsaUserColumns.LOGIN.getColumnIndex(), loginField.getText().trim());
+                    preparedStatement.setString(ElsaUserColumns.PASSWORD.getColumnIndex(), firstPasswordField.getText().trim());
+                    preparedStatement.setString(ElsaUserColumns.EMAIL.getColumnIndex(), emailField.getText().trim());
+                    preparedStatement.setInt(ElsaUserColumns.ROLE_ID.getColumnIndex(), Role.NEW.getIndex());
                     checkNullPossibleFields();
                     preparedStatement.execute();
                     closeWindow();
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -184,17 +189,12 @@ public class RegisterWindowController implements Initializable {
         final ResultSet loginFields = checkSelection.executeQuery();
         if (loginFields.next()) {
             changeLabelAttributes(messageLabel, "Login must be unique!", Color.RED);
-            textFieldList.get(ElsaUserFields.LOGIN.getColumnIndex() - 1).setStyle("-fx-border-color: red; -fx-border-radius: 5;");
-            shake(ElsaUserFields.LOGIN.getColumnIndex() - 1);
+            textFieldList.get(ElsaUserColumns.LOGIN.getColumnIndex() - 1).setStyle(StylesEnum.ERROR_STYLE.getStyle());
+            Shake.shake(textFieldList.get(ElsaUserColumns.LOGIN.getColumnIndex() - 1));
             return false;
         } else {
             return true;
         }
-    }
-
-    private void shake(final int index) {
-        final Shake shake = new Shake(textFieldList.get(index));
-        shake.getTranslateTransition().playFromStart();
     }
 
     private void closeWindow() {
@@ -206,66 +206,56 @@ public class RegisterWindowController implements Initializable {
     private void emailAsLogin(ActionEvent actionEvent) {
         final String prevLogin = loginField.getText();
         if (checkMailBox.isSelected()) {
-            loginField.setText(emailField.getText());
-            loginField.setDisable(true);
+            setTextInLoginField(loginField, emailField.getText(), true);
         } else {
-            loginField.setText(this.prevLogin);
-            loginField.setDisable(false);
+            setTextInLoginField(loginField, this.prevLogin, false);
         }
         this.prevLogin = prevLogin;
     }
 
+    private void setTextInLoginField(@NotNull final TextField textField, final String text, final boolean state) {
+        textField.setText(text);
+        textField.setDisable(state);
+    }
+
     @FXML
     private void loadImage(ActionEvent event) {
-        file = ImageManager.loadImage(imageView, loadImageBtn);
+        file = ImageManager.loadImage(imageView);
     }
 
     private void checkNullPossibleFields() throws SQLException, FileNotFoundException {
-        checkTelephoneField(checkTelephoneField());
-        checkAboutField(checkAboutField());
-        checkImage(checkFileWithImage());
-    }
-
-    private void checkTelephoneField(final boolean state) throws SQLException {
-        if (state) {// check phone field
-            preparedStatement.setNull(ElsaUserFields.TELEPHONE.getColumnIndex(), Types.NULL);
-        } else {
-            final String countryCode = countryCodePicker.getValue();
-            preparedStatement.setString(ElsaUserFields.TELEPHONE.getColumnIndex(), countryCode.concat(telephoneField.getText().trim()));
-        }
-    }
-
-    private void checkAboutField(final boolean state) throws SQLException {
-        if (state) {//check about field
-            preparedStatement.setNull(ElsaUserFields.ABOUT.getColumnIndex(), Types.NULL);
-        } else {
-            preparedStatement.setString(ElsaUserFields.ABOUT.getColumnIndex(), aboutYourselfTextArea.getText().trim());
-        }
+        checkTextField(checkTextField(telephoneField),
+                ElsaUserColumns.TELEPHONE.getColumnIndex(),
+                countryCodePicker.getValue().concat(telephoneField.getText().trim()));
+        checkTextField(aboutYourselfTextArea.getText().trim().isEmpty(),
+                ElsaUserColumns.ABOUT.getColumnIndex(),
+                aboutYourselfTextArea.getText().trim());
+        checkImage(file == null);
     }
 
     private void checkImage(final boolean state) throws SQLException, FileNotFoundException {
         if (state) {// check image field
-            preparedStatement.setNull(ElsaUserFields.IMAGE.getColumnIndex(), Types.NULL);
+            preparedStatement.setNull(ElsaUserColumns.IMAGE.getColumnIndex(), Types.NULL);
         } else {
             final InputStream fileInputStream = new FileInputStream(file);
-            preparedStatement.setBlob(ElsaUserFields.IMAGE.getColumnIndex(), fileInputStream, file.length());
+            preparedStatement.setBlob(ElsaUserColumns.IMAGE.getColumnIndex(), fileInputStream, file.length());
         }
     }
 
     @NotNull
     private List<Boolean> writeNotNullFieldsInList() {
         final List<Boolean> resultList = new ArrayList<>();// создать и заполнить лист результатами проверок значений что обязательно должны быть
-        resultList.add(checkNameField());//0
-        resultList.add(checkSurnameField());//1
-        resultList.add(checkLoginField());//2
+        resultList.add(checkTextField(nameField));//0
+        resultList.add(checkTextField(surnameField));//1
+        resultList.add(checkTextField(loginField));//2
         resultList.add(checkPasswordField());//3
         resultList.add(checkPasswordField());//4
-        resultList.add(checkEmailField());//5
+        resultList.add(checkTextField(emailField));//5
         return resultList;
     }
 
     @NotNull
-    private List<TextField> fillListByTextFields() {
+    private List<TextField> fillListByNotNullTextFields() {
         final List<TextField> textFields = new ArrayList<>();
         textFields.add(nameField);//0
         textFields.add(surnameField);//1
@@ -274,22 +264,6 @@ public class RegisterWindowController implements Initializable {
         textFields.add(secondPasswordField);//4
         textFields.add(emailField);//5
         return textFields;
-    }
-
-    private boolean checkNameField() {
-        return nameField.getText().trim().isEmpty();
-    }
-
-    private boolean checkSurnameField() {
-        return surnameField.getText().trim().isEmpty();
-    }
-
-    private boolean checkEmailField() {
-        return emailField.getText().trim().isEmpty();
-    }
-
-    private boolean checkLoginField() {
-        return checkMailBox.isSelected() ? checkEmailField() : loginField.getText().trim().isEmpty();
     }
 
     private boolean checkPasswordField() {
@@ -301,15 +275,13 @@ public class RegisterWindowController implements Initializable {
         return !password1.equals(password2);
     }
 
-    private boolean checkTelephoneField() {
-        return telephoneField.getText().trim().isEmpty();
-    }
+    private boolean checkTextField(@NotNull final TextField textField) { return textField.getText().trim().isEmpty(); }
 
-    private boolean checkAboutField() {
-        return aboutYourselfTextArea.getText().trim().isEmpty();
-    }
-
-    private boolean checkFileWithImage() {
-        return file == null;
+    private void checkTextField(final boolean state, final int columnIndex, final String text) throws SQLException {
+        if (state) {
+            preparedStatement.setNull(columnIndex, Types.NULL);
+        } else {
+            preparedStatement.setString(columnIndex, text);
+        }
     }
 }

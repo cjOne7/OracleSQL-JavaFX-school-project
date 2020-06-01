@@ -1,0 +1,30 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Sem_IDAS1_Yarosh">
+    <output-path>$PROJECT_DIR$/out/artifacts/Sem_IDAS1_Yarosh</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="sample.controllers.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="nativeBundle" value="image" />
+        <option name="title" value="" />
+        <option name="vendor" value="" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Sem_IDAS1_Yarosh.jar">
+        <element id="module-output" name="Sem_IDAS1_Yarosh" />
+      </element>
+      <element id="library" level="project" name="Maven: com.googlecode.libphonenumber:libphonenumber:8.12.1" />
+      <element id="library" level="project" name="Maven: com.oracle.database.ha:ons:19.3.0.0" />
+      <element id="library" level="project" name="Maven: com.oracle.database.ha:simplefan:19.3.0.0" />
+      <element id="library" level="project" name="Maven: com.oracle.database.jdbc:ojdbc8:19.3.0.0" />
+      <element id="library" level="project" name="Maven: com.oracle.database.jdbc:ucp:19.3.0.0" />
+      <element id="library" level="project" name="Maven: com.oracle.database.security:oraclepki:19.3.0.0" />
+      <element id="library" level="project" name="Maven: com.oracle.database.security:osdt_cert:19.3.0.0" />
+      <element id="library" level="project" name="Maven: com.oracle.database.security:osdt_core:19.3.0.0" />
+      <element id="library" level="project" name="Maven: org.jetbrains:annotations:19.0.0" />
+    </root>
+  </artifact>
+</component>

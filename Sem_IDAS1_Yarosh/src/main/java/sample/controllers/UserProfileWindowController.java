@@ -1,62 +1,41 @@
 package sample.controllers;
 
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import sample.CountryCodePicker;
-import sample.DatabaseManagement.DbManager;
+import sample.ImageManager;
+import sample.Shake;
+import sample.databasemanager.DbManager;
 
 import java.io.*;
 import java.net.URL;
-import java.sql.Blob;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import sample.Enums.ElsaUserFields;
-import sample.User;
+import sample.enums.ElsaUserColumns;
+import sample.dbtableclasses.User;
+import sample.enums.StylesEnum;
 
 public class UserProfileWindowController implements Initializable {
 
-    private static final int LAYOUT_X_OF_LOAD_BTN = 735;
-    private static final int LAYOUT_Y_OF_LOAD_BTN = 161;
-    private static final int WIDTH_OF_LOAD_BTN = 142;
-
-    private static final int NAME = 1;
-    private static final int SURNAME = 2;
-    private static final int LOGIN = 3;
-    private static final int PASSWORD = 4;
-    private static final int E_MAIL = 5;
-    private static final int TELEPHONE = 6;
-    private static final int ABOUT = 7;
-    private static final int IMAGE = 8;
-
+    private static final String UPDATE_QUERY = "UPDATE ST58310.ELSA_USER set NAME = ?, SURNAME = ?, LOGIN = ?, PASSWORD = ?, EMAIL = ?, TELEPHONE = ?, ABOUT = ?, IMAGE = ? where USER_ID = ?";
 
     private final DbManager dbManager = new DbManager();
-    private ObservableList<String> countryCodes;
-    private Image image;
+    private PreparedStatement updateStatement;
+
     private File file;
     private User user;
 
-    public static int userID;
+    private List<TextField> textFieldList;
 
     @FXML
     private TextField nameField;
@@ -83,78 +62,70 @@ public class UserProfileWindowController implements Initializable {
     @FXML
     private PasswordField newPasswordField;
     @FXML
-    private Button changePasswordBtn;
-    @FXML
-    private Button loadImageBtn;
-    @FXML
     private Button cancelBtn;
-
-    public UserProfileWindowController() {
-    }
+    @FXML
+    private Label messageLabel;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        textFieldList = fillListByTextFields();
+        oldPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
+            cutSpace(oldPasswordField, newValue, Color.RED);
+            oldPasswordField.setStyle(StylesEnum.EMPTY_STRING.getStyle());
+        });
+        newPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
+            changePasswordsLabel(reenteredPasswordField.getText(), newValue, Color.RED);
+            cutSpace(newPasswordField, newValue, Color.RED);
+        });
+        reenteredPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
+            changePasswordsLabel(newPasswordField.getText(), newValue, Color.RED);
+            cutSpace(reenteredPasswordField, newValue, Color.RED);
+        });
+        telephoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (!newValue.isEmpty()) {
+                    Integer.parseInt(newValue);
+                }
+            } catch (NumberFormatException e) {
+                telephoneField.setText(oldValue);
+            }
+        });
+
         final String selectQuery = "SELECT * from ST58310.ELSA_USER where USER_ID = ?";
         try {
             final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             preparedStatement.setInt(1, MainWindowController.userID);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                final String name = fillTextField(nameField, ElsaUserFields.NAME.toString(), resultSet);
-                final String surname = fillTextField(surnameField, ElsaUserFields.SURNAME.toString(), resultSet);
-                final String email = fillTextField(emailField, ElsaUserFields.EMAIL.toString(), resultSet);
-                final String login = fillTextField(loginField, ElsaUserFields.LOGIN.toString(), resultSet);
-                final String password = resultSet.getString(ElsaUserFields.PASSWORD.toString());
-                final String telephone = resultSet.getString(ElsaUserFields.TELEPHONE.toString());
-
-                final String about = resultSet.getString(ElsaUserFields.ABOUT.toString());
+                final String name = fillTextField(nameField, ElsaUserColumns.NAME.toString(), resultSet);
+                final String surname = fillTextField(surnameField, ElsaUserColumns.SURNAME.toString(), resultSet);
+                final String email = fillTextField(emailField, ElsaUserColumns.EMAIL.toString(), resultSet);
+                final String login = fillTextField(loginField, ElsaUserColumns.LOGIN.toString(), resultSet);
+                final String password = resultSet.getString(ElsaUserColumns.PASSWORD.toString());
+                final String telephone = resultSet.getString(ElsaUserColumns.TELEPHONE.toString());
+                final String about = resultSet.getString(ElsaUserColumns.ABOUT.toString());
                 aboutYourselfTextArea.setText(about);
-                final Blob image = resultSet.getBlob(ElsaUserFields.IMAGE.toString());
-                if (image != null) {
-                    try {
-                        final InputStream input = image.getBinaryStream();
-                        file = new File("image");
-                        final FileOutputStream fos = new FileOutputStream(file);
-                        byte[] buffer = new byte[1024];
-                        while (input.read(buffer) > 0) {
-                            fos.write(buffer);
-                        }
-                        this.image = new Image(file.toURI().toString());
-                        imageView.setImage(new Image(file.toURI().toString()));
 
-                        double rootWidth = imageView.getFitWidth();
-                        double rootHeight = imageView.getFitHeight();
-                        double imageWidth = this.image.getWidth();
-                        double imageHeight = this.image.getHeight();
-                        double ratioX = rootWidth / imageWidth;
-                        double ratioY = rootHeight / imageHeight;
-                        double ratio = Math.min(ratioX, ratioY);
-                        imageView.setPreserveRatio(false);
-                        double width = ratio * imageWidth;
-                        double height = ratio * imageHeight;
-                        imageView.setFitWidth(width);
-                        imageView.setFitHeight(height);
-
-                        imageView.setLayoutX(LAYOUT_X_OF_LOAD_BTN + (WIDTH_OF_LOAD_BTN - imageView.getFitWidth()) / 2);
-                        imageView.setLayoutY(LAYOUT_Y_OF_LOAD_BTN - imageView.getFitHeight() - 10);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                final Blob blob = resultSet.getBlob(ElsaUserColumns.IMAGE.toString());
+                try {
+                    file = ImageManager.loadImage(blob, imageView);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-                final int role = resultSet.getInt("ROLE_ID");
-                user = new User(name, surname, login, password, email, telephone, about, image, role);
+                final int role = resultSet.getInt(ElsaUserColumns.ROLE_ID.toString());
+                user = new User(name, surname, login, password, email, telephone, about, blob, role);
 
-                countryCodes = CountryCodePicker.getCountryCodes();
-                countryCodePicker.setItems(countryCodes);
-                countryCodePicker.setValue(getISOCountry(telephone));
-                telephoneField.setText(getPhoneNumber(telephone));
+                countryCodePicker.setStyle(StylesEnum.COMBO_BOX_STYLE.getStyle());
+                countryCodePicker.setItems(CountryCodePicker.getCountryCodes());
+                countryCodePicker.setValue(CountryCodePicker.getISOCountry(telephone));
+                telephoneField.setText(CountryCodePicker.getPhoneNumber(telephone));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
+
 
     private String fillTextField(@NotNull final TextField textField, final String columnName, @NotNull final ResultSet resultSet) throws SQLException {
         final String string = resultSet.getString(columnName);
@@ -162,103 +133,195 @@ public class UserProfileWindowController implements Initializable {
         return string;
     }
 
-    private String getISOCountry(final String telephone) {
-        final List<String> list = countryCodes.stream().filter(str -> str.substring(0, 2).equals(telephone.substring(0, 2))).collect(Collectors.toList());
-        return list.isEmpty() ? countryCodes.get(0) : list.get(0);
+    private boolean changePasswordIsSuccessful() {
+        if (oldPasswordField.getText().isEmpty() && newPasswordField.getText().isEmpty() && reenteredPasswordField.getText().isEmpty()) {
+            return true;
+        } else {
+            final String oldPassword = user.getPassword();
+            final String oldUserEnteredPassword = oldPasswordField.getText();
+            final String newPassword = newPasswordField.getText();
+            final String newReenteredPassword = reenteredPasswordField.getText();
+            if (oldPassword.equals(oldUserEnteredPassword)) {
+                if (newPassword.equals(newReenteredPassword) && !newPassword.isEmpty()) {
+                    user.setPassword(newPassword);
+                    return true;
+                } else {
+                    changeLabelAttributes(messageLabel, "Fields are empty or don't match", Color.RED);
+                    changeFieldStyle(newPasswordField, StylesEnum.ERROR_STYLE.getStyle());
+                    changeFieldStyle(reenteredPasswordField, StylesEnum.ERROR_STYLE.getStyle());
+                    return false;
+                }
+            } else {
+                changeLabelAttributes(messageLabel, "Passwords don't match!", Color.RED);
+                changeFieldStyle(oldPasswordField, StylesEnum.ERROR_STYLE.getStyle());
+                return false;
+            }
+        }
     }
 
-    @NotNull
-    private String getPhoneNumber(@NotNull final String telephone) {
-        return telephone.substring(getISOCountry(telephone).length());
+    private void changeFieldStyle(final TextField textField, final String style) {
+        Shake.shake(textField);
+        textField.setStyle(style);
     }
 
-    @FXML
-    private void changePassword(ActionEvent event) {
-
+    //------------------------------------------------------------------------------------------------------------------
+    private void cutSpace(final TextField textField, @NotNull final String text, final Color textColor) {
+        if (text.contains(" ")) {
+            final String result = text.replace(" ", StylesEnum.EMPTY_STRING.getStyle());
+            textField.setText(result);
+            changeLabelAttributes(messageLabel, "Spaces in password are forbidden.", textColor);
+        } else {
+            changeLabelAttributes(messageLabel, StylesEnum.EMPTY_STRING.getStyle(), Color.TRANSPARENT);
+        }
     }
+
+    private void changeLabelAttributes(@NotNull final Label label, final String text, final Color textColor) {
+        label.setText(text);
+        label.setTextFill(textColor);
+    }
+
+    private void changePasswordsLabel(final String password, @NotNull final String newValue, final Color textColor) {
+        if (newValue.equals(password)) {
+            changeLabelAttributes(messageLabel, StylesEnum.EMPTY_STRING.getStyle(), Color.TRANSPARENT);
+        } else {
+            changeLabelAttributes(messageLabel, "Passwords have to match!", textColor);
+        }
+        changePasswordFieldsStyle(StylesEnum.ERROR_STYLE.getStyle());
+    }
+
+    private void changePasswordFieldsStyle(final String style) {
+        newPasswordField.setStyle(style);
+        reenteredPasswordField.setStyle(style);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     @FXML
     private void loadImage(ActionEvent event) {
-//      file =  ImageManager.loadImage(imageView, loadImageBtn);
-        final FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("JPG, JPEG, PNG", "*.jpg", "*.jpeg", "*.png"));
-        file = fileChooser.showOpenDialog(null);
-        if (file != null) {
-            image = new Image(file.toURI().toString());
-            imageView.setImage(image);
-            double rootWidth = imageView.getFitWidth();
-            double rootHeight = imageView.getFitHeight();
-            double imageWidth = image.getWidth();
-            double imageHeight = image.getHeight();
-            double ratioX = rootWidth / imageWidth;
-            double ratioY = rootHeight / imageHeight;
-            double ratio = Math.min(ratioX, ratioY);
-            imageView.setPreserveRatio(false);
-            double width = ratio * imageWidth;
-            double height = ratio * imageHeight;
-            imageView.setFitWidth(width);
-            imageView.setFitHeight(height);
-
-            imageView.setLayoutX(loadImageBtn.getLayoutX() + (loadImageBtn.getWidth() - imageView.getFitWidth()) / 2);
-            imageView.setLayoutY(loadImageBtn.getLayoutY() - imageView.getFitHeight() - 10);
-        }
+        file = ImageManager.loadImage(imageView);
     }
 
     @FXML
     private void updateUsersData(ActionEvent event) {
-        final String updateQuery = "UPDATE ST58310.ELSA_USER set NAME = ?, SURNAME = ?, LOGIN = ?, PASSWORD = ?, EMAIL = ?, TELEPHONE = ?, ABOUT = ?, IMAGE = ? where USER_ID = ?";
-        try {
-            final PreparedStatement updateStatement = dbManager.getConnection().prepareStatement(updateQuery);
-            updateStatement.setString(NAME, nameField.getText().trim());
-            updateStatement.setString(SURNAME, surnameField.getText().trim());
-            updateStatement.setString(LOGIN, loginField.getText().trim());
-            updateStatement.setString(PASSWORD, user.getPassword());
-            updateStatement.setString(E_MAIL, emailField.getText().trim());
-            updateStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        final List<Boolean> resultList = writeNotNullFieldsInList();
 
+        if (resultList.contains(true)) {//если хоть одно обязательное поле пустое
+            for (int i = 0; i < textFieldList.size(); i++) {
+                if (resultList.get(i)) {
+                    Shake.shake(textFieldList.get(i));
+                    textFieldList.get(i).setStyle(StylesEnum.ERROR_STYLE.getStyle());
+                }
+            }
+            changeLabelAttributes(messageLabel, "Fields with * have to be filled!", Color.RED);
+        } else {
+            try {
+                if (checkLoginForUnique() && changePasswordIsSuccessful()) {
+                    updateStatement = dbManager.getConnection().prepareStatement(UPDATE_QUERY);
+                    updateStatement.setString(ElsaUserColumns.NAME.getColumnIndex(), nameField.getText().trim());
+                    updateStatement.setString(ElsaUserColumns.SURNAME.getColumnIndex(), surnameField.getText().trim());
+                    updateStatement.setString(ElsaUserColumns.LOGIN.getColumnIndex(), loginField.getText().trim());
+                    updateStatement.setString(ElsaUserColumns.PASSWORD.getColumnIndex(), user.getPassword());
+                    updateStatement.setString(ElsaUserColumns.EMAIL.getColumnIndex(), emailField.getText().trim());
+                    checkNullPossibleFields();
+                    updateStatement.setInt(ElsaUserColumns.USER_ID.getColumnIndex() - 1, MainWindowController.userID);
+                    updateStatement.executeUpdate();
+                    final Optional<ButtonType> op = Main.callAlertWindow("Inform window", "Your changes have been processed successfully.", Alert.AlertType.INFORMATION, "/images/information_icon.png");
+                    if (op.get().equals(ButtonType.OK)) {
+                        closeStage(finishEditingBtn);
+                    }
+                    deleteIntermediateFile();
+                }
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void closeStage(@NotNull final Button button) {
+        final Stage stage = (Stage) button.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
     private void cancelEditing(ActionEvent event) {
-        final Stage stage = (Stage) cancelBtn.getScene().getWindow();
-        stage.close();
+        deleteIntermediateFile();
+        closeStage(cancelBtn);
     }
 
-
-    private boolean checkNameField() {
-        return nameField.getText().trim().isEmpty();
+    private void deleteIntermediateFile() {
+        file = new File("image.png");
+        file.delete();
     }
 
-    private boolean checkSurnameField() {
-        return surnameField.getText().trim().isEmpty();
+    //------------------------------------------------------------------------------------------------------------------
+    private boolean checkLoginForUnique() throws SQLException {
+        final String login = loginField.getText().trim();
+        if (!login.equals(user.getLogin())) {
+            final String selectQuery = "select st58310.elsa_user.login from st58310.elsa_user where login like ?";
+            final PreparedStatement checkSelection = dbManager.getConnection().prepareStatement(selectQuery);
+            checkSelection.setString(1, login);
+            final ResultSet loginFields = checkSelection.executeQuery();
+            if (loginFields.next()) {
+                changeLabelAttributes(messageLabel, "Login must be unique!", Color.RED);
+                textFieldList.get(ElsaUserColumns.LOGIN.getColumnIndex() - 1).setStyle(StylesEnum.ERROR_STYLE.getStyle());
+                Shake.shake(textFieldList.get(ElsaUserColumns.LOGIN.getColumnIndex() - 1));
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 
-    private boolean checkEmailField() {
-        return emailField.getText().trim().isEmpty();
+    private void checkNullPossibleFields() throws SQLException, FileNotFoundException {
+        checkTextField(checkTextField(telephoneField),//check phone field
+                ElsaUserColumns.TELEPHONE.getColumnIndex(),
+                countryCodePicker.getValue().concat(telephoneField.getText().trim()));
+        checkTextField(aboutYourselfTextArea.getText().trim().isEmpty(),//check about field
+                ElsaUserColumns.ABOUT.getColumnIndex(),
+                aboutYourselfTextArea.getText().trim());
+        checkImage(file == null);//check file
     }
 
-    private boolean checkLoginField() {
-        return loginField.getText().trim().isEmpty();
+    private void checkImage(final boolean state) throws SQLException, FileNotFoundException {
+        if (state) {// check image field
+            updateStatement.setNull(ElsaUserColumns.IMAGE.getColumnIndex(), Types.NULL);
+        } else {
+            final InputStream fileInputStream = new FileInputStream(file);
+            updateStatement.setBlob(ElsaUserColumns.IMAGE.getColumnIndex(), fileInputStream, file.length());
+        }
     }
 
-    private boolean checkPasswordField() {
-        return false;
+    @NotNull
+    private List<Boolean> writeNotNullFieldsInList() {
+        final List<Boolean> resultList = new ArrayList<>();// создать и заполнить лист результатами проверок значений что обязательно должны быть
+        resultList.add(checkTextField(nameField));//0
+        resultList.add(checkTextField(surnameField));//1
+        resultList.add(checkTextField(loginField));//2
+        resultList.add(checkTextField(emailField));//3
+        return resultList;
     }
 
-    private boolean checkTelephoneField() {
-        return telephoneField.getText().trim().isEmpty();
+    @NotNull
+    private List<TextField> fillListByTextFields() {
+        final List<TextField> textFields = new ArrayList<>();
+        textFields.add(nameField);//0
+        textFields.add(surnameField);//1
+        textFields.add(loginField);//2
+        textFields.add(emailField);//3
+        return textFields;
     }
 
-    private boolean checkAboutField() {
-        return aboutYourselfTextArea.getText().trim().isEmpty();
+    private boolean checkTextField(@NotNull final TextField textField) {
+        return textField.getText().trim().isEmpty();
     }
 
-    private boolean checkImage() {
-        return image == null;
+    private void checkTextField(final boolean state, final int columnIndex, final String text) throws SQLException {
+        if (state) {
+            updateStatement.setNull(columnIndex, Types.NULL);
+        } else {
+            updateStatement.setString(columnIndex, text);
+        }
     }
-
 }

@@ -1,4 +1,4 @@
-package sample.Enums;
+package sample.enums;
 
 import org.jetbrains.annotations.Nullable;
 
