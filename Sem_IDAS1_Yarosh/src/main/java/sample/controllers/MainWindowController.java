@@ -69,17 +69,17 @@ public class MainWindowController implements Initializable {
                     final int roleId = resultSet.getInt(ElsaUserColumns.ROLE_ID.toString());
                     switch (Role.getRole(roleId)) {
                         case NEW:
-                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/NewUserWindow.fxml", "New user window", "/images/new_user_icon.png");
+                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/NewUserWindow.fxml", "New user window", "/images/new_user_icon.png");
                             break;
                         case STUDENT:
-                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/StudentWindow.fxml", "Student window", "/images/student_icon.png");
+                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/StudentWindow.fxml", "Student window", "/images/student_icon.png");
                             break;
                         case TEACHER:
-                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/TeacherWindow.fxml", "Teacher window", "/images/teacher_icon.png");
+                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/TeacherWindow.fxml", "Teacher window", "/images/teacher_icon.png");
                             break;
                         case ADMINISTRATOR:
                         case MAIN_ADMIN:
-                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/AdministratorWindow.fxml", "Admin window", "/images/admin_icon.png");
+                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/adminsfxmls/AdminWindow.fxml", "Admin window", "/images/admin_icon.png");
                             break;
                     }
                 } else {

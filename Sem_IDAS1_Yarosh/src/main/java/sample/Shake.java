@@ -12,10 +12,10 @@ public final class Shake {
 
     public static void shake(final Node node) {
         if (node != null) {
-            translateTransition = new TranslateTransition(Duration.millis(50), node);
+            translateTransition = new TranslateTransition(Duration.millis(50), node);//создание объекта для проигрования анимации и указание длительности
             translateTransition.setFromX(0);
             translateTransition.setByX(10);
-            translateTransition.setCycleCount(4);
+            translateTransition.setCycleCount(4);//количество повторений
             translateTransition.setAutoReverse(true);
             translateTransition.playFromStart();
         }

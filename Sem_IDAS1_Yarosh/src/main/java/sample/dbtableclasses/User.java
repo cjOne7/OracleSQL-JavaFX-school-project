@@ -14,6 +14,7 @@ public class User {
     private Blob image;
 
     private int roleId;
+    private int userId;
 
     public User(final String name,
                 final String surname,
@@ -23,7 +24,8 @@ public class User {
                 final String telephone,
                 final String about,
                 final Blob image,
-                final int roleId) {
+                final int roleId,
+                final int userId) {
         this.name = name;
         this.surname = surname;
         this.login = login;
@@ -33,6 +35,7 @@ public class User {
         this.about = about;
         this.image = image;
         this.roleId = roleId;
+        this.userId = userId;
     }
 
     public User(final String name,
@@ -40,13 +43,26 @@ public class User {
                 final String email,
                 final String telephone,
                 final String login,
-                final int roleId) {
+                final int roleId,
+                final int userId) {
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.telephone = telephone;
         this.login = login;
         this.roleId = roleId;
+        this.userId = userId;
+    }
+
+    public User(final String surname, final String login, final int userId) {
+        this.surname = surname;
+        this.login = login;
+        this.userId = userId;
+    }
+
+    public User(final String name, final String surname, final String login, final int userId) {
+        this(surname, login, userId);
+        this.name = name;
     }
 
     public String getLogin() {
@@ -59,19 +75,24 @@ public class User {
 
     public String getPassword() { return password; }
 
+    public int getUserId() { return userId; }
+
+    public String getSurname() { return surname; }
+
     public void setRoleId(final int roleId) {
         this.roleId = roleId;
     }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public String toString() {
         return "User: " +
                 "name: " + name +
-                ", surname: " + surname +
-                ", telephone: " + telephone +
-                ", login: " + login +
-                ", role_id: " + roleId;
+                ", surname: " + surname
+                + (telephone == null ? "" :  ", telephone: " + telephone) +
+                ", login: " + login;
     }
 }

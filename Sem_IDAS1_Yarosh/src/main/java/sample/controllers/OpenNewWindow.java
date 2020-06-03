@@ -5,12 +5,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import sample.enums.StylesEnum;
 
 import java.io.IOException;
 import java.sql.Statement;
@@ -30,15 +32,18 @@ public final class OpenNewWindow {
             final String title,
             final Image iconImage) {
         try {
-            final Stage stage = new Stage();
             final Parent root = FXMLLoader.load(cl.getResource(fxmlFile));
-            configureStage(stage, root, title, resizable, iconImage);
+            configureStage(root, title, resizable, iconImage);
         } catch (IOException ex) {
             Logger.getLogger(cl.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private static void configureStage(@NotNull final Stage stage, final Parent root, final String title, final boolean resizable, final Image iconImage) {
+    private static void configureStage(final Parent root,
+                                       final String title,
+                                       final boolean resizable,
+                                       final Image iconImage) {
+        final Stage stage = new Stage();
         stage.setScene(new Scene(root));
 
         stage.setOnCloseRequest((event) -> {

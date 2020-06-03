@@ -114,7 +114,8 @@ public class UserProfileWindowController implements Initializable {
                 }
 
                 final int role = resultSet.getInt(ElsaUserColumns.ROLE_ID.toString());
-                user = new User(name, surname, login, password, email, telephone, about, blob, role);
+                final int userId = resultSet.getInt(ElsaUserColumns.USER_ID.toString());
+                user = new User(name, surname, login, password, email, telephone, about, blob, role, userId);
 
                 countryCodePicker.setStyle(StylesEnum.COMBO_BOX_STYLE.getStyle());
                 countryCodePicker.setItems(CountryCodePicker.getCountryCodes());

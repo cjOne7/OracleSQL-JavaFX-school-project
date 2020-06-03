@@ -34,11 +34,13 @@ public final class CountryCodePicker {
         return PhoneNumberUtil.getInstance().getCountryCodeForRegion(countryCode);
     }
 
+    //метод для получения кода страны
     public static String getISOCountry(final String telephone) {
         final List<String> list = COUNTRY_CODES.stream().filter(str -> str.substring(0, 2).equals(telephone.substring(0, 2))).collect(Collectors.toList());
         return list.isEmpty() ? COUNTRY_CODES.get(0) : list.get(0);
     }
 
+    //метод для получения номера телефона без кода страны
     @NotNull
     public static String getPhoneNumber(@NotNull final String telephone) {
         return telephone.substring(getISOCountry(telephone).length());

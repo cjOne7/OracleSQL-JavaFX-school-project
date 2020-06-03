@@ -280,8 +280,8 @@
     <schema id="92" parent="1" name="ST58310">
       <ObjectId>228</ObjectId>
       <CreatedTimestamp>2020-05-23.19:30:56</CreatedTimestamp>
-      <ModifiedTimestamp>2020-05-31.20:38:47</ModifiedTimestamp>
-      <IntrospectionTimestamp>2020-05-31.20:47:36</IntrospectionTimestamp>
+      <ModifiedTimestamp>2020-06-02.01:53:47</ModifiedTimestamp>
+      <IntrospectionTimestamp>2020-06-02.19:35:06</IntrospectionTimestamp>
       <Current>1</Current>
     </schema>
     <schema id="93" parent="1" name="ST58579">
@@ -47958,7 +47958,7 @@
     <table id="6915" parent="92" name="SUBJECT">
       <ObjectId>316011</ObjectId>
       <CreatedTimestamp>2020-05-25.22:51:42</CreatedTimestamp>
-      <ModifiedTimestamp>2020-05-31.20:00:06</ModifiedTimestamp>
+      <ModifiedTimestamp>2020-06-01.19:45:11</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <table id="6916" parent="92" name="TEST_TABLE">
@@ -47970,7 +47970,7 @@
     <table id="6917" parent="92" name="USER_SUBJECT">
       <ObjectId>316017</ObjectId>
       <CreatedTimestamp>2020-05-25.22:51:42</CreatedTimestamp>
-      <ModifiedTimestamp>2020-05-25.22:51:43</ModifiedTimestamp>
+      <ModifiedTimestamp>2020-06-02.01:53:47</ModifiedTimestamp>
       <TemporaryPreserve>1</TemporaryPreserve>
     </table>
     <column id="6918" parent="6905" name="CATEGORY_ID">
@@ -48481,6 +48481,7 @@ STY_MTRL_STY_MTRL_ID</ColNames>
     <column id="7003" parent="6915" name="ABBREVIATION">
       <Position>3</Position>
       <DataType>VARCHAR2(10 byte)|0s</DataType>
+      <NotNull>1</NotNull>
     </column>
     <column id="7004" parent="6915" name="CREDITS">
       <Position>4</Position>
@@ -48507,19 +48508,35 @@ STY_MTRL_STY_MTRL_ID</ColNames>
       <ColNames>SUBJECT_ID</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="7009" parent="6915" name="SUBJECT_PK">
+    <index id="7009" parent="6915" name="SUB_ABBREVIATION_UN">
+      <ObjectId>319208</ObjectId>
+      <CreatedTimestamp>2020-06-01.19:45:11</CreatedTimestamp>
+      <ModifiedTimestamp>2020-06-01.19:45:11</ModifiedTimestamp>
+      <TablespaceName>STUDENTI</TablespaceName>
+      <ColNames>NAME
+ABBREVIATION</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="7010" parent="6915" name="SUBJECT_PK">
       <ModifiedTimestamp>2020-05-25.22:51:42</ModifiedTimestamp>
       <ColNames>SUBJECT_ID</ColNames>
       <InitiallyDeferred>1</InitiallyDeferred>
       <UnderlyingIndexName>SUBJECT_PK</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
-    <check id="7010" parent="6915" name="SUB_SEM_CHECK">
+    <key id="7011" parent="6915" name="SUB_ABBREVIATION_UN">
+      <ModifiedTimestamp>2020-06-01.19:45:11</ModifiedTimestamp>
+      <ColNames>NAME
+ABBREVIATION</ColNames>
+      <InitiallyDeferred>1</InitiallyDeferred>
+      <UnderlyingIndexName>SUB_ABBREVIATION_UN</UnderlyingIndexName>
+    </key>
+    <check id="7012" parent="6915" name="SUB_SEM_CHECK">
       <ModifiedTimestamp>2020-05-31.19:48:35</ModifiedTimestamp>
       <ColNames>SEMESTER</ColNames>
       <Predicate>&quot;SEMESTER&quot;&lt;=2 AND &quot;SEMESTER&quot;&gt;0</Predicate>
     </check>
-    <trigger id="7011" parent="6915" name="SUBJECT_TRG">
+    <trigger id="7013" parent="6915" name="SUBJECT_TRG">
       <ObjectId>318689</ObjectId>
       <SourceTextLength>75</SourceTextLength>
       <WithDebugInfo>1</WithDebugInfo>
@@ -48528,31 +48545,31 @@ STY_MTRL_STY_MTRL_ID</ColNames>
       <Events>I</Events>
       <Turn>before-row</Turn>
     </trigger>
-    <column id="7012" parent="6916" name="USER_ID">
+    <column id="7014" parent="6916" name="USER_ID">
       <Position>1</Position>
       <DataType>NUMBER(*)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="7013" parent="6916" name="SURNAME">
+    <column id="7015" parent="6916" name="SURNAME">
       <Position>2</Position>
       <DataType>VARCHAR2(20 byte)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="7014" parent="6916" name="NAME">
+    <column id="7016" parent="6916" name="NAME">
       <Position>3</Position>
       <DataType>VARCHAR2(20 byte)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="7015" parent="6916" name="AGE">
+    <column id="7017" parent="6916" name="AGE">
       <Position>4</Position>
       <DataType>NUMBER(*)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="7016" parent="6916" name="EMAIL">
+    <column id="7018" parent="6916" name="EMAIL">
       <Position>5</Position>
       <DataType>VARCHAR2(64 byte)|0s</DataType>
     </column>
-    <index id="7017" parent="6916" name="TEST_TABLE_PK">
+    <index id="7019" parent="6916" name="TEST_TABLE_PK">
       <ObjectId>314759</ObjectId>
       <CreatedTimestamp>2020-05-23.19:30:56</CreatedTimestamp>
       <ModifiedTimestamp>2020-05-23.19:30:56</ModifiedTimestamp>
@@ -48560,14 +48577,14 @@ STY_MTRL_STY_MTRL_ID</ColNames>
       <ColNames>USER_ID</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="7018" parent="6916" name="TEST_TABLE_PK">
+    <key id="7020" parent="6916" name="TEST_TABLE_PK">
       <ModifiedTimestamp>2020-05-23.19:30:56</ModifiedTimestamp>
       <ColNames>USER_ID</ColNames>
       <InitiallyDeferred>1</InitiallyDeferred>
       <UnderlyingIndexName>TEST_TABLE_PK</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
-    <trigger id="7019" parent="6916" name="TEST_TABLE_TRG">
+    <trigger id="7021" parent="6916" name="TEST_TABLE_TRG">
       <ObjectId>314761</ObjectId>
       <SourceTextLength>193</SourceTextLength>
       <WithDebugInfo>1</WithDebugInfo>
@@ -48576,17 +48593,17 @@ STY_MTRL_STY_MTRL_ID</ColNames>
       <Events>I</Events>
       <Turn>before-row</Turn>
     </trigger>
-    <column id="7020" parent="6917" name="SUBJECT_SUBJECT_ID">
+    <column id="7022" parent="6917" name="SUBJECT_SUBJECT_ID">
       <Position>1</Position>
       <DataType>NUMBER(*)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="7021" parent="6917" name="USER_USER_ID">
+    <column id="7023" parent="6917" name="USER_USER_ID">
       <Position>2</Position>
       <DataType>NUMBER(*)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="7022" parent="6917" name="USER_SUBJECT_PK">
+    <index id="7024" parent="6917" name="USER_SUBJECT_PK">
       <ObjectId>316018</ObjectId>
       <CreatedTimestamp>2020-05-25.22:51:42</CreatedTimestamp>
       <ModifiedTimestamp>2020-05-25.22:51:42</ModifiedTimestamp>
@@ -48595,7 +48612,7 @@ STY_MTRL_STY_MTRL_ID</ColNames>
 USER_USER_ID</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="7023" parent="6917" name="USER_SUBJECT_PK">
+    <key id="7025" parent="6917" name="USER_SUBJECT_PK">
       <ModifiedTimestamp>2020-05-25.22:51:42</ModifiedTimestamp>
       <ColNames>SUBJECT_SUBJECT_ID
 USER_USER_ID</ColNames>
@@ -48603,21 +48620,21 @@ USER_USER_ID</ColNames>
       <UnderlyingIndexName>USER_SUBJECT_PK</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="7024" parent="6917" name="USER_SUBJECT_SUBJECT_FK">
-      <ModifiedTimestamp>2020-05-25.22:51:43</ModifiedTimestamp>
+    <foreign-key id="7026" parent="6917" name="USER_SUBJECT_SUBJECT_FK">
+      <ModifiedTimestamp>2020-06-02.01:53:47</ModifiedTimestamp>
       <ColNames>SUBJECT_SUBJECT_ID</ColNames>
       <RefSchemaName>ST58310</RefSchemaName>
       <RefTableName>SUBJECT</RefTableName>
       <RefKeyName>SUBJECT_PK</RefKeyName>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <foreign-key id="7025" parent="6917" name="USER_SUBJECT_USER_FK">
-      <ModifiedTimestamp>2020-05-25.22:51:43</ModifiedTimestamp>
+    <foreign-key id="7027" parent="6917" name="USER_SUBJECT_USER_FK">
+      <ModifiedTimestamp>2020-06-02.01:53:47</ModifiedTimestamp>
       <ColNames>USER_USER_ID</ColNames>
       <RefSchemaName>ST58310</RefSchemaName>
       <RefTableName>ELSA_USER</RefTableName>
       <RefKeyName>USER_PK</RefKeyName>
-      <OnDelete>restrict</OnDelete>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
   </database-model>
 </dataSource>

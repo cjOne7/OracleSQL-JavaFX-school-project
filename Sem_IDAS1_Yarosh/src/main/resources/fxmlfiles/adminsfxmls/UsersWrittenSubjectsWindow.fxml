@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="493.0" prefWidth="778.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.adminscontrollers.UsersWrittenSubjectsController">
+   <children>
+      <Button layoutX="300.0" layoutY="425.0" mnemonicParsing="false" onAction="#deleteRow" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="delete">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <ListView fx:id="usersSubjectsListView" layoutX="22.0" layoutY="23.0" prefHeight="386.0" prefWidth="731.0" />
+      <Button layoutX="22.0" layoutY="425.0" mnemonicParsing="false" onAction="#addUserSubject" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="add">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="162.0" layoutY="425.0" mnemonicParsing="false" onAction="#changeUserSubject" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="Change">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="633.0" layoutY="425.0" mnemonicParsing="false" onAction="#refreshList" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="refresh">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

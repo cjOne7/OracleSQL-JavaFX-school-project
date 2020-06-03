@@ -25,6 +25,7 @@
       <element id="library" level="project" name="Maven: com.oracle.database.security:osdt_cert:19.3.0.0" />
       <element id="library" level="project" name="Maven: com.oracle.database.security:osdt_core:19.3.0.0" />
       <element id="library" level="project" name="Maven: org.jetbrains:annotations:19.0.0" />
+      <element id="module-source" name="Sem_IDAS1_Yarosh" />
     </root>
   </artifact>
 </component>
