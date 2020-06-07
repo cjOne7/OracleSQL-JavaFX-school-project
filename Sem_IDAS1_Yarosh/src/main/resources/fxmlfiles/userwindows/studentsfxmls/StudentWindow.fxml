@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="669.0" prefWidth="1000.0" style="-fx-background-color: #b3ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.StudentWindowController">
+<AnchorPane prefHeight="669.0" prefWidth="1000.0" style="-fx-background-color: #b3ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.studnetscontrollers.StudentWindowController">
    <children>
       <ListView fx:id="writtenSubjectsListView" layoutX="528.0" layoutY="39.0" prefHeight="500.0" prefWidth="450.0" />
       <Button fx:id="writeSubjectBtn" layoutX="42.0" layoutY="582.0" mnemonicParsing="false" onAction="#writeSubject" prefHeight="30.0" prefWidth="166.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878; -fx-border-radius: 0;" text="Write subject">
@@ -14,7 +14,7 @@
             <Font name="Castellar" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="unsubscribeBtn" layoutX="220.0" layoutY="582.0" mnemonicParsing="false" onAction="#deleteSubject" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="unsubscribe from subject">
+      <Button fx:id="unsubscribeBtn" disable="true" layoutX="220.0" layoutY="582.0" mnemonicParsing="false" onAction="#deleteSubject" prefHeight="30.0" prefWidth="236.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="unsubscribe from subject">
          <font>
             <Font name="Castellar" size="13.0" />
          </font>

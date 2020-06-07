@@ -1,4 +1,4 @@
-package sample.controllers.userwindows;
+package sample.controllers.userwindows.studnetscontrollers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -135,6 +135,11 @@ public class StudentWindowController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void watchMaterials(ActionEvent event) {
+        OpenNewWindow.openNewWindow("/fxmlfiles/userwindows/studentsfxmls/StudentStudyMatWindow.fxml", getClass(), false, "Study materials window", new Image("/images/admin_icon.png"));
     }
 
     @FXML

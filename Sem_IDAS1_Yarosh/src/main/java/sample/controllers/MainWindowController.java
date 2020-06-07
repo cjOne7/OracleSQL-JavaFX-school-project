@@ -76,10 +76,10 @@ public class MainWindowController implements Initializable {
                             closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/NewUserWindow.fxml", "New user window", "/images/new_user_icon.png");
                             break;
                         case STUDENT:
-                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/StudentWindow.fxml", "Student window", "/images/student_icon.png");
+                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/studentsfxmls/StudentWindow.fxml", "Student window", "/images/student_icon.png");
                             break;
                         case TEACHER:
-                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/TeacherWindow.fxml", "Teacher window", "/images/teacher_icon.png");
+                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/teachersfxmls/TeacherWindow.fxml", "Teacher window", "/images/teacher_icon.png");
                             break;
                         case ADMINISTRATOR:
                         case MAIN_ADMIN:

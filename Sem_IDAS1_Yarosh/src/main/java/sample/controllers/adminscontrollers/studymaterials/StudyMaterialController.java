@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import static sample.controllers.adminscontrollers.studymaterials.CreateStudyMaterialsController.studyMatId;
+
 public class StudyMaterialController implements Initializable {
 
     private final DbManager dbManager = new DbManager();
@@ -41,7 +43,7 @@ public class StudyMaterialController implements Initializable {
         final String selectQuery = "SELECT FILE_NAME, THE_FILE, FILE_TYPE FROM ST58310.STY_MTRL WHERE STUDY_MATERIAL_ID = ?";
         try {
             final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
-            preparedStatement.setInt(1, CreateStudyMaterialsController.studyMatId);
+            preparedStatement.setInt(1, studyMatId);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 final String fileName = resultSet.getString(StudyMatColumns.FILE_NAME.getColumnName());

@@ -93,6 +93,10 @@ public class StudyMaterial {
         return creater;
     }
 
+    public int getSubjectId() {
+        return subjectId;
+    }
+
     @NotNull
     String getSubjectName() {
         final DbManager dbManager = new DbManager();

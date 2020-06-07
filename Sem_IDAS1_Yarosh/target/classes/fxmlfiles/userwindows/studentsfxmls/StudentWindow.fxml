@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="669.0" prefWidth="1000.0" style="-fx-background-color: #b3ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.StudentWindowController">
+<AnchorPane prefHeight="669.0" prefWidth="1000.0" style="-fx-background-color: #b3ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.studnetscontrollers.StudentWindowController">
    <children>
       <ListView fx:id="writtenSubjectsListView" layoutX="528.0" layoutY="39.0" prefHeight="500.0" prefWidth="450.0" />
-      <Button fx:id="writeSubjectBtn" layoutX="42.0" layoutY="582.0" mnemonicParsing="false" onAction="#writeSubject" prefHeight="26.0" prefWidth="150.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878; -fx-border-radius: 0;" text="Write subject">
+      <Button fx:id="writeSubjectBtn" layoutX="42.0" layoutY="582.0" mnemonicParsing="false" onAction="#writeSubject" prefHeight="30.0" prefWidth="166.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878; -fx-border-radius: 0;" text="Write subject">
          <font>
             <Font name="Castellar" size="14.0" />
          </font>
@@ -45,6 +45,9 @@
             <Font name="Castellar" size="14.0" />
          </font>
       </Label>
-      <Button layoutX="502.0" layoutY="585.0" mnemonicParsing="false" text="Watch study materials" />
+      <Button layoutX="42.0" layoutY="624.0" mnemonicParsing="false" onAction="#watchMaterials" prefHeight="30.0" prefWidth="165.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="Watch materials">
+         <font>
+            <Font name="Castellar" size="13.0" />
+         </font></Button>
    </children>
 </AnchorPane>

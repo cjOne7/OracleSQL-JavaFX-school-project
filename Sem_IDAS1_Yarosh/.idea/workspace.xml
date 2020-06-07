@@ -85,16 +85,16 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\java\sample" />
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows\teachersfxmls" />
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows\studentsfxmls" />
       <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\adminsfxmls\categorymanagement" />
       <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows" />
       <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles" />
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\adminsfxmls\subjectmanagement" />
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\adminsfxmls\usersubject" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\java\sample" />
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -187,7 +187,8 @@
       <workItem from="1591449017377" duration="7652000" />
       <workItem from="1591459327203" duration="26238000" />
       <workItem from="1591522864841" duration="833000" />
-      <workItem from="1591527683711" duration="14709000" />
+      <workItem from="1591527683711" duration="23343000" />
+      <workItem from="1591569402142" duration="773000" />
     </task>
     <servers />
   </component>
@@ -211,10 +212,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="71" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1591394502702" />
-    <state x="574" y="17" width="459" height="647" key="#com.intellij.ide.util.MemberChooser" timestamp="1591546066479">
+    <state x="574" y="17" width="459" height="647" key="#com.intellij.ide.util.MemberChooser" timestamp="1591569780055">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="574" y="17" width="459" height="647" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1591546066479" />
+    <state x="574" y="17" width="459" height="647" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1591569780055" />
     <state x="542" y="186" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1591043803857">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -243,22 +244,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="591" y="311" key="Github.CreateGistDialog/0.0.1536.824@0.0.1536.824" timestamp="1591312813904" />
-    <state width="1493" height="212" key="GridCell.Tab.0.bottom" timestamp="1591550538545">
+    <state width="1493" height="212" key="GridCell.Tab.0.bottom" timestamp="1591570243101">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="212" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591550538545" />
-    <state width="1493" height="212" key="GridCell.Tab.0.center" timestamp="1591550538545">
+    <state width="1493" height="212" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591570243101" />
+    <state width="1493" height="212" key="GridCell.Tab.0.center" timestamp="1591570243101">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="212" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591550538545" />
-    <state width="1493" height="212" key="GridCell.Tab.0.left" timestamp="1591550538545">
+    <state width="1493" height="212" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591570243101" />
+    <state width="1493" height="212" key="GridCell.Tab.0.left" timestamp="1591570243100">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="212" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591550538545" />
-    <state width="1493" height="212" key="GridCell.Tab.0.right" timestamp="1591550538545">
+    <state width="1493" height="212" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591570243100" />
+    <state width="1493" height="212" key="GridCell.Tab.0.right" timestamp="1591570243101">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="212" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591550538545" />
+    <state width="1493" height="212" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591570243101" />
     <state width="1493" height="199" key="GridCell.Tab.1.bottom" timestamp="1591488078797">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -283,18 +284,18 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="584" y="190" key="chooseDestDirectoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1590622635060" />
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1591527686172">
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1591569401375">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591527686172" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591569401375" />
     <state x="209" y="108" key="new project wizard" timestamp="1591377062454">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="209" y="108" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1591377062454" />
-    <state x="475" y="31" key="refactoring.ChangeSignatureDialog" timestamp="1591485136417">
+    <state x="475" y="31" key="refactoring.ChangeSignatureDialog" timestamp="1591566215152">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="475" y="31" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1591485136417" />
+    <state x="475" y="31" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1591566215152" />
     <state x="425" y="187" key="run.anything.popup" timestamp="1591544530155">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

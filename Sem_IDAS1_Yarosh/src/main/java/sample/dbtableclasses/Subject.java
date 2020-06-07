@@ -1,6 +1,15 @@
 package sample.dbtableclasses;
 
 
+import sample.databasemanager.DbManager;
+import sample.enums.SubjectColumns;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Subject {
     private int subjectId;
     private String name;
@@ -36,13 +45,37 @@ public class Subject {
         return subjectId;
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getAbbreviation() { return abbreviation; }
+    public String getAbbreviation() {
+        return abbreviation;
+    }
 
-    public int getSemester() { return semester; }
+    public int getSemester() {
+        return semester;
+    }
 
-    public int getYear() { return year; }
+    public int getYear() {
+        return year;
+    }
+
+    public static List<Subject> getSubjectList() throws SQLException {
+        final DbManager dbManager = new DbManager();
+        final String selectQuery = "SELECT SUBJECT_ID, NAME, ABBREVIATION FROM ST58310.SUBJECT ORDER BY YEAR, SEMESTER";
+        final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
+        final ResultSet resultSet = preparedStatement.executeQuery();
+        final List<Subject> subjectList = new ArrayList<>();
+        while (resultSet.next()) {
+            final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
+            final String subjectName = resultSet.getString(SubjectColumns.NAME.toString());
+            final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
+            final Subject subject = new Subject(subjectId, subjectName, abbreviation);
+            subjectList.add(subject);
+        }
+        return subjectList;
+    }
 
     @Override
     public String toString() {
@@ -54,7 +87,7 @@ public class Subject {
                 (description == null || description.isEmpty() ? "" : ". Description: " + description);
     }
 
-    public String toComboBoxString(){
+    public String toComboBoxString() {
         return name + "/" + abbreviation;
     }
 }

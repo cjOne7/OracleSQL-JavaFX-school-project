@@ -48,7 +48,6 @@ public class AdminController implements Initializable {
         OpenNewWindow.openNewWindow("/fxmlfiles/adminsfxmls/studymaterials/CreateStudyMaterialsWindow.fxml", getClass(), false, "Create study materials window", new Image("/images/admin_icon.png"));
     }
 
-
     @FXML
     private void assignCategory(ActionEvent event) {
         OpenNewWindow.openNewWindow("/fxmlfiles/adminsfxmls/studymaterials/AssignCategoryWindow.fxml", getClass(), false, "Assign category window", new Image("/images/admin_icon.png"));

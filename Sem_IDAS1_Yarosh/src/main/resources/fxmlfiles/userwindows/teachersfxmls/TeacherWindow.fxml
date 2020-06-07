@@ -5,13 +5,12 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="486.0" prefWidth="717.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.TeacherWindowController">
+<AnchorPane prefHeight="486.0" prefWidth="717.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.teacherscontrollers.TeacherWindowController">
    <children>
       <Button layoutX="533.0" layoutY="30.0" mnemonicParsing="false" onAction="#createQuiz" text="create quiz" />
       <Button layoutX="621.0" layoutY="401.0" mnemonicParsing="false" onAction="#openProfile" prefWidth="130.0" text="profile" />
       <Button fx:id="logOutBtn" layoutX="622.0" layoutY="434.0" mnemonicParsing="false" onAction="#logOut" prefWidth="130.0" text="log out" />
-      <Button layoutX="607.0" layoutY="293.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="144.0" text="watch study materials" />
+      <Button layoutX="607.0" layoutY="293.0" mnemonicParsing="false" onAction="#watchMaterials" prefHeight="26.0" prefWidth="144.0" text="watch study materials" />
       <Button layoutX="622.0" layoutY="363.0" mnemonicParsing="false" onAction="#refreshList" prefWidth="130.0" text="refresh" />
       <Button layoutX="607.0" layoutY="326.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="144.0" text="watch subject" />
       <ListView layoutX="59.0" layoutY="59.0" prefHeight="293.0" prefWidth="422.0" />

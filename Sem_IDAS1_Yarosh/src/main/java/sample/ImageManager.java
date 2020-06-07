@@ -57,12 +57,10 @@ public final class ImageManager {
     private static void scaleImage(@NotNull final ImageView imageView, @NotNull final File file) {
         final Image image = new Image(file.toURI().toString());
         imageView.setImage(new Image(file.toURI().toString()));
-        final double rootWidth = IMAGE_VIEW_FIT_WIDTH;
-        final double rootHeight = IMAGE_VIEW_FIT_HEIGHT;
         final double imageWidth = image.getWidth();
         final double imageHeight = image.getHeight();
-        final double ratioX = rootWidth / imageWidth;
-        final double ratioY = rootHeight / imageHeight;
+        final double ratioX = (double) IMAGE_VIEW_FIT_WIDTH / imageWidth;
+        final double ratioY = (double) IMAGE_VIEW_FIT_HEIGHT / imageHeight;
         final double ratio = Math.min(ratioX, ratioY);
         imageView.setPreserveRatio(false);
         final double width = ratio * imageWidth;
