@@ -46,20 +46,20 @@ public final class OpenNewWindow {
         final Stage stage = new Stage();
         stage.setScene(new Scene(root));
 
-        stage.setOnCloseRequest((event) -> {
-            final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Exiting");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure that you want to close this window?");
-            final Stage stage1 = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage1.getIcons().add(new Image("/images/exit_icon.png"));
-            final Optional<ButtonType> op = alert.showAndWait();
-            if (op.get().equals(ButtonType.OK)) {
-                stage.close();
-            } else {
-                event.consume();
-            }
-        });
+//        stage.setOnCloseRequest((event) -> {
+//            final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            alert.setTitle("Exiting");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Are you sure that you want to close this window?");
+//            final Stage stage1 = (Stage) alert.getDialogPane().getScene().getWindow();
+//            stage1.getIcons().add(new Image("/images/exit_icon.png"));
+//            final Optional<ButtonType> op = alert.showAndWait();
+//            if (op.get().equals(ButtonType.OK)) {
+//                stage.close();
+//            } else {
+//                event.consume();
+//            }
+//        });
         stage.initStyle(StageStyle.DECORATED);
         stage.setResizable(resizable);
         stage.setTitle(title);

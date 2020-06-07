@@ -13,12 +13,14 @@ import java.util.ResourceBundle;
 
 public class AdminController implements Initializable {
 
+    public static int curUserId;
+
     @FXML
     private Button exitBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        curUserId = MainWindowController.curUserId; //запомнить айди текущего авторизированного пользователя
     }
 
     @FXML
@@ -37,7 +39,24 @@ public class AdminController implements Initializable {
     }
 
     @FXML
+    private void categoryManagement(ActionEvent event) {
+        OpenNewWindow.openNewWindow("/fxmlfiles/adminsfxmls/categorymanagement/StudyMatCategoryWindow.fxml", getClass(), false, "Study material category window", new Image("/images/admin_icon.png"));
+    }
+
+    @FXML
+    private void createStudyMaterial(ActionEvent event) {
+        OpenNewWindow.openNewWindow("/fxmlfiles/adminsfxmls/studymaterials/CreateStudyMaterialsWindow.fxml", getClass(), false, "Create study materials window", new Image("/images/admin_icon.png"));
+    }
+
+
+    @FXML
+    private void assignCategory(ActionEvent event) {
+        OpenNewWindow.openNewWindow("/fxmlfiles/adminsfxmls/studymaterials/AssignCategoryWindow.fxml", getClass(), false, "Assign category window", new Image("/images/admin_icon.png"));
+    }
+
+    @FXML
     private void openProfile(ActionEvent event) {
+        MainWindowController.curUserId = curUserId; //вернуть прежний айди текущего авторизированного пользователя для просмотра его профиля
         OpenNewWindow.openNewWindow("/fxmlfiles/UserProfileWindow.fxml", getClass(), false, "Profile window", new Image("/images/profile_icon.png"));
     }
 

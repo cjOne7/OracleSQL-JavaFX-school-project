@@ -36,8 +36,6 @@ public class ChangeUserSubjectController implements Initializable {
     @FXML
     private Button cancelBtn;
     @FXML
-    private Button refreshListBtn;
-    @FXML
     private Button applyChangesBtn;
 
     @Override
@@ -47,15 +45,9 @@ public class ChangeUserSubjectController implements Initializable {
 
         fillUnwrittenSubjectsList();
         if (subjects.isEmpty()) {
-            changeDisable(true);
+            applyChangesBtn.setDisable(true);
         }
     }
-
-    private void changeDisable(final boolean state) {
-        refreshListBtn.setDisable(state);
-        applyChangesBtn.setDisable(state);
-    }
-
     private void fillUnwrittenSubjectsList() {
         final String selectQuery = "SELECT NAME, ABBREVIATION, SUBJECT_ID FROM ST58310.SUBJECT WHERE SUBJECT_ID NOT IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
         try {

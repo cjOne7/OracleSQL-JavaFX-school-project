@@ -1,5 +1,7 @@
 package sample.dbtableclasses;
 
+import sample.enums.Role;
+
 import java.sql.Blob;
 
 public class User {
@@ -54,14 +56,19 @@ public class User {
         this.userId = userId;
     }
 
-    public User(final String surname, final String login, final int userId) {
+    public User(final String surname, final String login, final int userId, final int roleId) {
         this.surname = surname;
         this.login = login;
         this.userId = userId;
+        this.roleId = roleId;
     }
 
-    public User(final String name, final String surname, final String login, final int userId) {
-        this(surname, login, userId);
+    public User(final String name,
+                final String surname,
+                final String login,
+                final int userId,
+                final int roleId) {
+        this(surname, login, userId, roleId);
         this.name = name;
     }
 
@@ -73,11 +80,17 @@ public class User {
         return roleId;
     }
 
-    public String getPassword() { return password; }
+    public String getPassword() {
+        return password;
+    }
 
-    public int getUserId() { return userId; }
+    public int getUserId() {
+        return userId;
+    }
 
-    public String getSurname() { return surname; }
+    public String getSurname() {
+        return surname;
+    }
 
     public void setRoleId(final int roleId) {
         this.roleId = roleId;
@@ -91,8 +104,9 @@ public class User {
     public String toString() {
         return "User: " +
                 "name: " + name +
-                ", surname: " + surname
-                + (telephone == null ? "" :  ", telephone: " + telephone) +
-                ", login: " + login;
+                ", surname: " + surname +
+                (telephone == null ? "" : ", telephone: " + telephone) +
+                ", login: " + login +
+                (roleId == 0 ? "" : ", role: " + Role.getRole(roleId));
     }
 }

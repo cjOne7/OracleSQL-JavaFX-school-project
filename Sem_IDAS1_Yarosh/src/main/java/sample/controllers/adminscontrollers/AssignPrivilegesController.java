@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import sample.controllers.Main;
 import sample.controllers.MainWindowController;
@@ -45,9 +46,9 @@ public class AssignPrivilegesController implements Initializable {
     @FXML
     private Button deleteUserBtn;
     @FXML
-    private Button refreshUserListBtn;
-    @FXML
     private Button watchProfileBtn;
+    @FXML
+    private Button closeBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,7 +62,7 @@ public class AssignPrivilegesController implements Initializable {
         selectQuery = "SELECT ROLE_ID from ST58310.ELSA_USER where USER_ID = ?";
         try {
             final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
-            preparedStatement.setInt(1, MainWindowController.userID);
+            preparedStatement.setInt(1, MainWindowController.curUserId);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 roleID = resultSet.getInt(ElsaUserColumns.ROLE_ID.toString());
@@ -94,9 +95,14 @@ public class AssignPrivilegesController implements Initializable {
         fillUsersListView(selectQuery);
         roleFilterComboBox.setValue(Role.NEW);
         roleChangerComboBox.setValue(Role.STUDENT);
+
+        if (users.size() >= 1) {
+            changeDisable(false);
+        }
     }
 
-    private void fillRoleComboBoxes(@NotNull final Role topBorder, final ComboBox<Role>... comboBox) {
+    @SafeVarargs
+    private final void fillRoleComboBoxes(@NotNull final Role topBorder, final ComboBox<Role>... comboBox) {
         Arrays.stream(Role.values()).limit(topBorder.getIndex()).forEach(role -> comboBox[0].getItems().add(role));//fill combobox for filter watching
         Arrays.stream(Role.values()).limit(topBorder.getIndex() - 1).forEach(role -> comboBox[1].getItems().add(role));//fill combobox for choosing an user who will be deleted/updated
     }
@@ -159,7 +165,7 @@ public class AssignPrivilegesController implements Initializable {
             listViewWithNewUsers.getItems().remove(user);
         }
         if (users.isEmpty()) {
-            changeDisAfterDeletingAdding(true);
+            changeDisable(true);
         }
     }
 
@@ -167,33 +173,26 @@ public class AssignPrivilegesController implements Initializable {
     private void addNewUser(ActionEvent event) {
         OpenNewWindow.openNewWindow("/fxmlfiles/RegisterWindow.fxml", getClass(), false, "Register window", new Image("/images/new_user.png"));
         refreshList(event);
-        if (users.size() >= 1){
-            changeDisAfterDeletingAdding(false);
+        if (users.size() >= 1 && roleFilterComboBox.getValue() != Role.MAIN_ADMIN) {
+            changeDisable(false);
         }
-    }
-
-    private void changeDisAfterDeletingAdding(final boolean state) {
-        changeDisable(state);
-        refreshUserListBtn.setDisable(state);
-        watchProfileBtn.setDisable(state);
-    }
-
-    @FXML
-    private void openProfile(ActionEvent event) {
-        OpenNewWindow.openNewWindow("/fxmlfiles/UserProfileWindow.fxml", getClass(), false, "Profile window", new Image("/images/profile_icon.png"));
-    }
-
-    @FXML
-    private void refreshList(ActionEvent event) {
-        users.removeAll(users);
-        fillUsersListView(selectQuery);
-        final ObservableList<User> observableList = users.stream().filter(user -> user.getRoleId() == roleFilterComboBox.getValue().getIndex()).collect(Collectors.toCollection(FXCollections::observableArrayList));
-        listViewWithNewUsers.setItems(observableList);
     }
 
     private void changeDisable(final boolean state) {
         deleteUserBtn.setDisable(state);
         changeRoleBtn.setDisable(state);
+        watchProfileBtn.setDisable(state);
+    }
+
+    @FXML
+    private void refreshList(ActionEvent event) {
+        users.clear();
+        fillUsersListView(selectQuery);
+        final ObservableList<User> observableList = users.stream().filter(user -> user.getRoleId() == roleFilterComboBox.getValue().getIndex()).collect(Collectors.toCollection(FXCollections::observableArrayList));
+        listViewWithNewUsers.setItems(observableList);
+        if (users.size() >= 1) {
+            changeDisable(false);
+        }
     }
 
     @FXML
@@ -202,8 +201,11 @@ public class AssignPrivilegesController implements Initializable {
         if (user == null) {
             Main.callAlertWindow("Warning", "User is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
         } else {
-            MainWindowController.userID = user.getUserId();
+            MainWindowController.curUserId = user.getUserId();
             OpenNewWindow.openNewWindow("/fxmlfiles/UserProfileWindow.fxml", getClass(), false, "Profile window", new Image("/images/profile_icon.png"));
         }
     }
+
+    @FXML
+    private void close(ActionEvent event) { ((Stage) closeBtn.getScene().getWindow()).close(); }
 }

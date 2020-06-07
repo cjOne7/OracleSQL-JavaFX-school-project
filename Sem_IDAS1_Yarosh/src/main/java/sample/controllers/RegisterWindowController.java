@@ -151,7 +151,6 @@ public class RegisterWindowController implements Initializable {
     @FXML
     private void registerNewUser(ActionEvent event) {
         try {
-            preparedStatement = dbManager.getConnection().prepareStatement(EXECUTE_QUERY);
 
             final List<Boolean> resultList = writeNotNullFieldsInList();
 
@@ -165,6 +164,7 @@ public class RegisterWindowController implements Initializable {
                 changeLabelAttributes(messageLabel, "Fields with * have to be filled!", Color.RED);
             } else {
                 if (checkLoginForUnique()) {
+                    preparedStatement = dbManager.getConnection().prepareStatement(EXECUTE_QUERY);
                     preparedStatement.setString(ElsaUserColumns.NAME.getColumnIndex(), nameField.getText().trim());
                     preparedStatement.setString(ElsaUserColumns.SURNAME.getColumnIndex(), surnameField.getText().trim());
                     preparedStatement.setString(ElsaUserColumns.LOGIN.getColumnIndex(), loginField.getText().trim());
@@ -189,8 +189,8 @@ public class RegisterWindowController implements Initializable {
         final ResultSet loginFields = checkSelection.executeQuery();
         if (loginFields.next()) {
             changeLabelAttributes(messageLabel, "Login must be unique!", Color.RED);
-            textFieldList.get(ElsaUserColumns.LOGIN.getColumnIndex() - 1).setStyle(StylesEnum.ERROR_STYLE.getStyle());
             Shake.shake(textFieldList.get(ElsaUserColumns.LOGIN.getColumnIndex() - 1));
+            textFieldList.get(ElsaUserColumns.LOGIN.getColumnIndex() - 1).setStyle(StylesEnum.ERROR_STYLE.getStyle());
             return false;
         } else {
             return true;

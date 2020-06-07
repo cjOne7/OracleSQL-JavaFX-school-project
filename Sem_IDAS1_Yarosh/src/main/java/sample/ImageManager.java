@@ -40,7 +40,7 @@ public final class ImageManager {
     public static File loadImage(final Blob blob, final ImageView imageView) throws SQLException, IOException {
         if (blob != null) {
             final InputStream input = blob.getBinaryStream();//перевод Blob в InputStream
-            final File file = new File("image.png");//создание файла куда будет помещена картинка
+            final File file = new File(System.getProperty("user.home") + "/Downloads/profile_image.png");//создание файла куда будет помещена картинка
             final FileOutputStream fos = new FileOutputStream(file);//запись в этот файл
             final byte[] buffer = new byte[1024];
             while (input.read(buffer) > 0) {

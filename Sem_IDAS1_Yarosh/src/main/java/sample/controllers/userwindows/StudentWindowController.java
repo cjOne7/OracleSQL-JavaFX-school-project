@@ -55,7 +55,7 @@ public class StudentWindowController implements Initializable {
 
             final String selectWrittenSubjects = "SELECT * FROM st58310.subject WHERE subject_id IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
             final PreparedStatement selectWrittenSubjectsStatement = dbManager.getConnection().prepareStatement(selectWrittenSubjects);
-            selectWrittenSubjectsStatement.setInt(1, MainWindowController.userID);
+            selectWrittenSubjectsStatement.setInt(1, MainWindowController.curUserId);
             final ResultSet allWrittenSubjects = selectWrittenSubjectsStatement.executeQuery();
             fillObservableList(allWrittenSubjects, writtenSubjects);
         } catch (SQLException e) {
@@ -130,7 +130,7 @@ public class StudentWindowController implements Initializable {
         try {
             final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, subject.getSubjectId());
-            preparedStatement.setInt(2, MainWindowController.userID);
+            preparedStatement.setInt(2, MainWindowController.curUserId);
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

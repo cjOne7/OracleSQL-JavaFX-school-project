@@ -94,7 +94,7 @@ public class UserProfileWindowController implements Initializable {
         final String selectQuery = "SELECT * from ST58310.ELSA_USER where USER_ID = ?";
         try {
             final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
-            preparedStatement.setInt(1, MainWindowController.userID);
+            preparedStatement.setInt(1, MainWindowController.curUserId);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 final String name = fillTextField(nameField, ElsaUserColumns.NAME.toString(), resultSet);
@@ -198,9 +198,7 @@ public class UserProfileWindowController implements Initializable {
     //------------------------------------------------------------------------------------------------------------------
 
     @FXML
-    private void loadImage(ActionEvent event) {
-        file = ImageManager.loadImage(imageView);
-    }
+    private void loadImage(ActionEvent event) { file = ImageManager.loadImage(imageView); }
 
     @FXML
     private void updateUsersData(ActionEvent event) {
@@ -224,13 +222,13 @@ public class UserProfileWindowController implements Initializable {
                     updateStatement.setString(ElsaUserColumns.PASSWORD.getColumnIndex(), user.getPassword());
                     updateStatement.setString(ElsaUserColumns.EMAIL.getColumnIndex(), emailField.getText().trim());
                     checkNullPossibleFields();
-                    updateStatement.setInt(ElsaUserColumns.USER_ID.getColumnIndex() - 1, MainWindowController.userID);
+                    updateStatement.setInt(ElsaUserColumns.USER_ID.getColumnIndex() - 1, MainWindowController.curUserId);
                     updateStatement.executeUpdate();
                     final Optional<ButtonType> op = Main.callAlertWindow("Inform window", "Your changes have been processed successfully.", Alert.AlertType.INFORMATION, "/images/information_icon.png");
                     if (op.get().equals(ButtonType.OK)) {
-                        closeStage(finishEditingBtn);
+                        file.deleteOnExit();
+                        ((Stage) finishEditingBtn.getScene().getWindow()).close();
                     }
-                    deleteIntermediateFile();
                 }
             } catch (SQLException | IOException e) {
                 e.printStackTrace();
@@ -238,21 +236,12 @@ public class UserProfileWindowController implements Initializable {
         }
     }
 
-    private void closeStage(@NotNull final Button button) {
-        final Stage stage = (Stage) button.getScene().getWindow();
-        stage.close();
-    }
-
     @FXML
     private void cancelEditing(ActionEvent event) {
-        deleteIntermediateFile();
-        closeStage(cancelBtn);
+        ((Stage) cancelBtn.getScene().getWindow()).close();
+        file.deleteOnExit();
     }
 
-    private void deleteIntermediateFile() {
-        file = new File("image.png");
-        file.delete();
-    }
 
     //------------------------------------------------------------------------------------------------------------------
     private boolean checkLoginForUnique() throws SQLException {

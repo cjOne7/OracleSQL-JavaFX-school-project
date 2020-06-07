@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1100.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.adminscontrollers.studymaterials.CreateStudyMaterialsController">
+   <children>
+      <ListView fx:id="materialsListView" layoutX="20.0" layoutY="51.0" prefHeight="543.0" prefWidth="686.0" />
+      <Button fx:id="loadMaterialBtn" layoutX="20.0" layoutY="613.0" mnemonicParsing="false" onAction="#loadMaterial" prefWidth="120.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="Upload">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="closeBtn" layoutX="935.0" layoutY="655.0" mnemonicParsing="false" onAction="#close" prefHeight="28.0" prefWidth="150.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="close">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Label alignment="CENTER" layoutX="238.0" layoutY="14.0" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878; -fx-background-radius: 5; -fx-border-radius: 5;" text="All study materials">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Label>
+      <Button fx:id="updateMaterialBtn" disable="true" layoutX="162.0" layoutY="613.0" mnemonicParsing="false" onAction="#updateMaterial" prefWidth="120.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="update ">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="deleteMaterialBtn" disable="true" layoutX="162.0" layoutY="655.0" mnemonicParsing="false" onAction="#deleteMaterial" prefWidth="120.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="Delete ">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="downloadFileBtn" disable="true" layoutX="20.0" layoutY="655.0" mnemonicParsing="false" onAction="#downloadFile" prefWidth="120.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="download">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <GridPane layoutX="714.0" layoutY="51.0" prefHeight="291.0" prefWidth="370.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="162.2000732421875" minWidth="10.0" prefWidth="123.800048828125" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="210.199951171875" minWidth="10.0" prefWidth="210.199951171875" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="181.39999618530274" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="181.39999618530274" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="246.3999908447266" minHeight="10.0" prefHeight="246.3999908447266" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Label text="subject:">
+                     <font>
+                        <Font name="Castellar" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </FlowPane>
+            <FlowPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2">
+               <children>
+                  <Label text="Description:">
+                     <font>
+                        <Font name="Castellar" size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets top="10.0" />
+                     </FlowPane.margin>
+                  </Label>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+               <children>
+                  <ComboBox fx:id="subjectComboBox" prefHeight="26.0" prefWidth="202.0" />
+               </children></FlowPane>
+            <FlowPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <TextArea fx:id="descriptionTextArea" prefHeight="207.0" prefWidth="202.0">
+                     <font>
+                        <Font name="Century Gothic" size="14.0" />
+                     </font>
+                     <FlowPane.margin>
+                        <Insets top="10.0" />
+                     </FlowPane.margin>
+                  </TextArea>
+               </children></FlowPane>
+            <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+               <children>
+                  <Label text="Number of pages:">
+                     <font>
+                        <Font name="Castellar" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </FlowPane>
+            <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="numberOfPagesTextField" prefHeight="28.0" prefWidth="202.0">
+                     <font>
+                        <Font name="Century Gothic" size="14.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </FlowPane>
+         </children>
+      </GridPane>
+      <Button fx:id="openMaterialBtn" disable="true" layoutX="304.0" layoutY="613.0" mnemonicParsing="false" onAction="#openMaterial" prefHeight="28.0" prefWidth="166.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="Open Material">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

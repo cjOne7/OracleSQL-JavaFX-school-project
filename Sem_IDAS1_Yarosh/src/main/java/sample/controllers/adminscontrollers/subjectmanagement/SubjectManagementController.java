@@ -59,8 +59,6 @@ public class SubjectManagementController implements Initializable {
     private Button changeSubjectBtn;
     @FXML
     private Button deleteSubjectBtn;
-    @FXML
-    private Button refreshListBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -90,7 +88,11 @@ public class SubjectManagementController implements Initializable {
         });
         subjectNameField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, subjectNameField, StylesEnum.EMPTY_STRING.getStyle()));
         abbreviationField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, abbreviationField, StylesEnum.EMPTY_STRING.getStyle()));
-        example();
+//        example();
+
+        if (allSubjects.size() >= 1){
+            changeDisable(false);
+        }
     }
 
     private void example() {
@@ -135,7 +137,6 @@ public class SubjectManagementController implements Initializable {
                 changeLabelAttributes(createSubjectMesLabel, "Fields with * have to be filled!", Color.RED);
             } else {
                 if (checkForUnique()) {
-
                     preparedStatement.setString(SubjectColumns.NAME.getColumnIndex(), subjectNameField.getText().trim());
                     preparedStatement.setString(SubjectColumns.ABBREVIATION.getColumnIndex(), abbreviationField.getText().trim());
                     preparedStatement.setInt(SubjectColumns.CREDITS.getColumnIndex(), Integer.parseInt(creditsField.getText().trim()));
@@ -159,7 +160,7 @@ public class SubjectManagementController implements Initializable {
                             yearSpinner.getValue(),
                             descriptionTextArea.getText().trim());
                     allSubjects.add(subject);
-//                    clearTextFields();
+                    clearTextFields();
                 }
             }
         } catch (SQLException e) {
@@ -173,7 +174,6 @@ public class SubjectManagementController implements Initializable {
     private void changeDisable(final boolean state){
         deleteSubjectBtn.setDisable(state);
         changeSubjectBtn.setDisable(state);
-        refreshListBtn.setDisable(state);
         yearFilterSpinner.setDisable(state);
         semesterFilterSpinner.setDisable(state);
     }
@@ -181,14 +181,13 @@ public class SubjectManagementController implements Initializable {
     private boolean checkForUnique() throws SQLException {
         final String name = subjectNameField.getText().trim();
         final String abbreviation = abbreviationField.getText().trim();
-        final String selectQuery = "SELECT NAME, ABBREVIATION FROM ST58310.SUBJECT WHERE NAME like ? AND ABBREVIATION like ?";
+        final String selectQuery = "SELECT NAME, ABBREVIATION FROM ST58310.SUBJECT WHERE UPPER(NAME) like UPPER(?) AND UPPER(ABBREVIATION) like UPPER(?)";
         final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
         preparedStatement.setString(1, name);
         preparedStatement.setString(2, abbreviation);
         final ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next()) {
             changeLabelAttributes(createSubjectMesLabel, "Subject's name or abbreviation must be unique!", Color.RED);
-
             doAnimationOnTextField(textFieldList.get(SubjectColumns.ABBREVIATION.getColumnIndex() - 1));
             doAnimationOnTextField(textFieldList.get(SubjectColumns.NAME.getColumnIndex() - 1));
             return false;

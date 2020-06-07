@@ -47,10 +47,14 @@ public class Subject {
     @Override
     public String toString() {
         return "Subject's name: " + name +
-                (abbreviation == null || abbreviation.isEmpty() ? "" : ", its abbreviation: '" + abbreviation + '\'') +
+                (abbreviation == null || abbreviation.isEmpty() ? "" : "/" + abbreviation) +
                 (credits == 0 ? "" : ", credits: " + credits) +
                 (year == 0 ? "" : ", year: " + year) +
                 (semester == 0 ? "" : ", semester: " + semester) +
                 (description == null || description.isEmpty() ? "" : ". Description: " + description);
+    }
+
+    public String toComboBoxString(){
+        return name + "/" + abbreviation;
     }
 }

@@ -1,5 +1,7 @@
 package sample.dbtableclasses;
 
+import sample.enums.Role;
+
 public class UserSubject {
 
     private User user;
@@ -21,6 +23,7 @@ public class UserSubject {
     @Override
     public String toString() {
         return "User's ID:" + user.getUserId()
+                + ", role: " + Role.getRole(user.getRoleId())
                 + ", surname: " + user.getSurname()
                 + ", login: " + user.getLogin()
                 + " has written the subject with ID: " + subject.getSubjectId()

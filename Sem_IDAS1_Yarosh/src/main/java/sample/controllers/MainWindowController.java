@@ -15,16 +15,18 @@ import sample.databasemanager.DbManager;
 import sample.enums.ElsaUserColumns;
 import sample.enums.Role;
 import sample.Shake;
+import sample.enums.StylesEnum;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
 
-    public static int userID;
+    public static int curUserId;
 
     private final DbManager dbManager = new DbManager();
 
@@ -39,12 +41,14 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        loginTextField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(loginTextField, ""));
-        passwordField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(passwordField, ""));
+        loginTextField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(loginTextField));
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(passwordField));
 
 //        loginTextField.setText("cj_one1");//new user
 //        passwordField.setText("123");
 //        loginTextField.setText("cj_one2");//student
+//        passwordField.setText("123");
+//        loginTextField.setText("cj_one4");//teacher
 //        passwordField.setText("123");
         loginTextField.setText("nikyarosh07@gmail.com");//admin
         passwordField.setText("Rfhnjirf258");
@@ -53,8 +57,8 @@ public class MainWindowController implements Initializable {
     @FXML
     private void logIn(ActionEvent event) {
         if (checkLoginFieldForEmpty() || checkPasswordFieldForEmpty()) {
-            checkIncomingField(checkLoginFieldForEmpty(), "-fx-border-color: red; -fx-border-radius: 5;", loginTextField);
-            checkIncomingField(checkPasswordFieldForEmpty(), "-fx-border-color: red; -fx-border-radius: 5;", passwordField);
+            checkIncomingField(checkLoginFieldForEmpty(), loginTextField);
+            checkIncomingField(checkPasswordFieldForEmpty(), passwordField);
         } else {
             final String login = loginTextField.getText().trim();
             final String password = passwordField.getText();
@@ -65,9 +69,9 @@ public class MainWindowController implements Initializable {
                 preparedStatement.setString(2, password);
                 final ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    userID = resultSet.getInt(ElsaUserColumns.USER_ID.toString());
+                    curUserId = resultSet.getInt(ElsaUserColumns.USER_ID.toString());
                     final int roleId = resultSet.getInt(ElsaUserColumns.ROLE_ID.toString());
-                    switch (Role.getRole(roleId)) {
+                    switch (Objects.requireNonNull(Role.getRole(roleId))) {
                         case NEW:
                             closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/NewUserWindow.fxml", "New user window", "/images/new_user_icon.png");
                             break;
@@ -83,8 +87,8 @@ public class MainWindowController implements Initializable {
                             break;
                     }
                 } else {
-                    checkIncomingField("-fx-border-color: red; -fx-border-radius: 5;", loginTextField);
-                    checkIncomingField("-fx-border-color: red; -fx-border-radius: 5;", passwordField);
+                    checkIncomingField(StylesEnum.ERROR_STYLE.getStyle(), loginTextField);
+                    checkIncomingField(StylesEnum.ERROR_STYLE.getStyle(), passwordField);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -104,10 +108,9 @@ public class MainWindowController implements Initializable {
 
     private void checkIncomingField(
             final boolean checkResult,
-            final String style,
             final TextField textField) {
         if (checkResult) {
-            textField.setStyle(style);
+            textField.setStyle(StylesEnum.ERROR_STYLE.getStyle());
             Shake.shake(textField);
             decorateErrorLabel("Empty fields");
         }
@@ -132,9 +135,9 @@ public class MainWindowController implements Initializable {
         return passwordField.getText().trim().isEmpty();
     }
 
-    private void changeTextFieldStyle(@NotNull final TextField textField, final String style) {
-        textField.setStyle(style);
-        decorateErrorLabel("");
+    private void changeTextFieldStyle(@NotNull final TextField textField) {
+        textField.setStyle(StylesEnum.EMPTY_STRING.getStyle());
+        decorateErrorLabel(StylesEnum.EMPTY_STRING.getStyle());
     }
 
     private static void closeStage(@NotNull final Button button) {
