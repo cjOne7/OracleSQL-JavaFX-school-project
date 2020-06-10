@@ -4,16 +4,31 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="486.0" prefWidth="717.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.teacherscontrollers.TeacherWindowController">
+<AnchorPane prefHeight="615.0" prefWidth="937.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.teacherscontrollers.TeacherWindowController">
    <children>
-      <Button layoutX="533.0" layoutY="30.0" mnemonicParsing="false" onAction="#createQuiz" text="create quiz" />
-      <Button layoutX="621.0" layoutY="401.0" mnemonicParsing="false" onAction="#openProfile" prefWidth="130.0" text="profile" />
-      <Button fx:id="logOutBtn" layoutX="622.0" layoutY="434.0" mnemonicParsing="false" onAction="#logOut" prefWidth="130.0" text="log out" />
-      <Button layoutX="607.0" layoutY="293.0" mnemonicParsing="false" onAction="#watchMaterials" prefHeight="26.0" prefWidth="144.0" text="watch study materials" />
-      <Button layoutX="622.0" layoutY="363.0" mnemonicParsing="false" onAction="#refreshList" prefWidth="130.0" text="refresh" />
-      <Button layoutX="607.0" layoutY="326.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="144.0" text="watch subject" />
-      <ListView layoutX="59.0" layoutY="59.0" prefHeight="293.0" prefWidth="422.0" />
-      <Label layoutX="59.0" layoutY="25.0" text="Your list of students" />
+      <Button layoutX="782.0" layoutY="531.0" mnemonicParsing="false" onAction="#openProfile" prefWidth="130.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="profile">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <Button fx:id="logOutBtn" layoutX="782.0" layoutY="574.0" mnemonicParsing="false" onAction="#logOut" prefWidth="130.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="log out">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <Button layoutX="456.0" layoutY="531.0" mnemonicParsing="false" onAction="#watchMaterials" prefHeight="30.0" prefWidth="195.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="watch materials">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <ListView fx:id="studentsList" layoutX="19.0" layoutY="59.0" prefHeight="454.0" prefWidth="404.0" />
+      <Label alignment="CENTER" layoutX="112.0" layoutY="15.0" prefHeight="30.0" prefWidth="251.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="Your list of students">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Label>
+      <ListView fx:id="subjectListView" layoutX="456.0" layoutY="59.0" prefHeight="454.0" prefWidth="456.0" />
+      <Label alignment="CENTER" layoutX="576.0" layoutY="15.0" prefHeight="30.0" prefWidth="251.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="Your list of subjects">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Label>
    </children>
 </AnchorPane>

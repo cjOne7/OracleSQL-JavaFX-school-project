@@ -15,14 +15,16 @@ import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class SelectStudyMaterials {
+public final class SelectStudyMaterials {
 
     private final DbManager dbManager = new DbManager();
 
+    @NotNull
     public ObservableList<StudyMaterial> getStudyMaterials() throws SQLException {
         final ObservableList<StudyMaterial> studyMaterials = FXCollections.observableArrayList();
-        final String selectQuery = "SELECT * FROM ST58310.STY_MTRL";
+        final String selectQuery = "SELECT * FROM ST58310.STY_MTRL ORDER BY FILE_NAME";
         final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
         final ResultSet resultSet = preparedStatement.executeQuery();
         while (resultSet.next()) {
@@ -46,7 +48,7 @@ public class SelectStudyMaterials {
         return new StudyMaterial(studyMatId, fileName, fileType, dateOfCreation, creater, numberOfPages, dateOfChanges, changer, description, subjectId);
     }
 
-    public void downloadFile(final StudyMaterial studyMaterial){
+    public void downloadFile(final StudyMaterial studyMaterial) {
         if (studyMaterial == null) {
             Main.callAlertWindow("Warning", "Study material is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
         } else {
@@ -81,6 +83,21 @@ public class SelectStudyMaterials {
             return file;
         } else {
             return null;
+        }
+    }
+
+    public void deleteMaterial(final StudyMaterial studyMaterial) {
+        if (studyMaterial == null) {
+            Main.callAlertWindow("Warning", "Study material is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
+        } else {
+            final String deleteQuery = "DELETE FROM ST58310.STY_MTRL WHERE STUDY_MATERIAL_ID = ?";
+            try {
+                final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(deleteQuery);
+                preparedStatement.setInt(1, studyMaterial.getStudyMatId());
+                preparedStatement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

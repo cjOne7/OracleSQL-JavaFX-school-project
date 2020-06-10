@@ -139,7 +139,7 @@ public class StudentWindowController implements Initializable {
 
     @FXML
     private void watchMaterials(ActionEvent event) {
-        OpenNewWindow.openNewWindow("/fxmlfiles/userwindows/studentsfxmls/StudentStudyMatWindow.fxml", getClass(), false, "Study materials window", new Image("/images/admin_icon.png"));
+        OpenNewWindow.openNewWindow("/fxmlfiles/userwindows/studentsfxmls/StudentStudyMatWindow.fxml", getClass(), false, "Study materials window", new Image("/images/student_icon.png"));
     }
 
     @FXML

@@ -1,6 +1,7 @@
 package sample.dbtableclasses;
 
 
+import org.jetbrains.annotations.NotNull;
 import sample.databasemanager.DbManager;
 import sample.enums.SubjectColumns;
 
@@ -41,6 +42,10 @@ public class Subject {
         this.abbreviation = abbreviation;
     }
 
+    public Subject(final int subjectId) {
+        this.subjectId = subjectId;
+    }
+
     public int getSubjectId() {
         return subjectId;
     }
@@ -61,7 +66,8 @@ public class Subject {
         return year;
     }
 
-    public static List<Subject> getSubjectList() throws SQLException {
+    @NotNull
+    public static List<Subject> getAllSubjectList() throws SQLException {
         final DbManager dbManager = new DbManager();
         final String selectQuery = "SELECT SUBJECT_ID, NAME, ABBREVIATION FROM ST58310.SUBJECT ORDER BY YEAR, SEMESTER";
         final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);

@@ -23,7 +23,7 @@ public class StudyMatCtgy {
         return "Category ID: " + category.getCategoryId()
                 + " and its name: " + category.getCategoryName()
                 + ". Study material ID: " + studyMaterial.getStudyMatId()
-                + ", filename: " + studyMaterial.getFileType() + "." + studyMaterial.getFileType()
+                + ", filename: " + studyMaterial.getFileName() + "." + studyMaterial.getFileType()
                 + ", subject: " + studyMaterial.getSubjectName()
                 + " and file creator: " + studyMaterial.getCreater();
     }

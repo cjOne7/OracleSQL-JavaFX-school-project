@@ -26,9 +26,9 @@ import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
 
-    public static int curUserId;
-
     private final DbManager dbManager = new DbManager();
+
+    public static int curUserId;
 
     @FXML
     private Button signInBtn;
@@ -48,10 +48,10 @@ public class MainWindowController implements Initializable {
 //        passwordField.setText("123");
 //        loginTextField.setText("cj_one2");//student
 //        passwordField.setText("123");
-//        loginTextField.setText("cj_one4");//teacher
-//        passwordField.setText("123");
-        loginTextField.setText("nikyarosh07@gmail.com");//admin
-        passwordField.setText("Rfhnjirf258");
+        loginTextField.setText("cj_one4");//teacher
+        passwordField.setText("123");
+//        loginTextField.setText("nikyarosh07@gmail.com");//admin
+//        passwordField.setText("Rfhnjirf258");
     }
 
     @FXML
@@ -83,7 +83,7 @@ public class MainWindowController implements Initializable {
                             break;
                         case ADMINISTRATOR:
                         case MAIN_ADMIN:
-                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/adminsfxmls/AdminWindow.fxml", "Admin window", "/images/admin_icon.png");
+                            closeCurAndOpenNewStage(signInBtn, "/fxmlfiles/userwindows/adminsfxmls/AdminWindow.fxml", "Admin window", "/images/admin_icon.png");
                             break;
                     }
                 } else {

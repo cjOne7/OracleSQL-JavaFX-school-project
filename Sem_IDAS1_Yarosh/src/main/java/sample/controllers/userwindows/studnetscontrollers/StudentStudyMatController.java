@@ -11,26 +11,19 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
 import sample.SelectStudyMaterials;
 import sample.controllers.Main;
 import sample.controllers.OpenNewWindow;
-import sample.controllers.adminscontrollers.studymaterials.CreateStudyMaterialsController;
-import sample.databasemanager.DbManager;
+import sample.controllers.userwindows.adminscontrollers.studymaterials.CreateStudyMaterialsController;
 import sample.dbtableclasses.StudyMaterial;
 import sample.dbtableclasses.Subject;
-import sample.dbtableclasses.UserSubject;
-import sample.enums.StudyMatColumns;
 import sample.enums.StylesEnum;
-import sample.enums.SubjectColumns;
 
-import java.io.*;
 import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class StudentStudyMatController implements Initializable {
@@ -47,12 +40,14 @@ public class StudentStudyMatController implements Initializable {
     @FXML
     private Button openMaterialBtn;
     @FXML
+    private Button openDiscussionBtn;
+    @FXML
     private Button closeBtn;
     @FXML
     private ComboBox<String> subjectComboBox;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         materialsListView.setStyle(StylesEnum.FONT_STYLE.getStyle());
         subjectComboBox.setStyle(StylesEnum.COMBO_BOX_STYLE.getStyle());
 
@@ -61,9 +56,14 @@ public class StudentStudyMatController implements Initializable {
                     .filter(studyMaterial -> getSubjectId() == studyMaterial.getSubjectId())
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
             materialsListView.setItems(sortedList);
+            if (sortedList.isEmpty()) {
+                changeDisable(true);
+            } else {
+                changeDisable(false);
+            }
         });
         try {
-            subjectList = Subject.getSubjectList();
+            subjectList = Subject.getAllSubjectList();
             studyMaterials = selectStudyMaterials.getStudyMaterials();
             materialsListView.setItems(studyMaterials);
         } catch (SQLException e) {
@@ -71,6 +71,12 @@ public class StudentStudyMatController implements Initializable {
         }
         subjectList.forEach(subject -> subjectComboBox.getItems().add(subject.toComboBoxString()));
         subjectComboBox.setValue(subjectList.get(0).toComboBoxString());
+    }
+
+    private void changeDisable(final boolean state) {
+        downloadFileBtn.setDisable(state);
+        openMaterialBtn.setDisable(state);
+        openDiscussionBtn.setDisable(state);
     }
 
     private int getSubjectId() {
@@ -93,12 +99,21 @@ public class StudentStudyMatController implements Initializable {
 
     @FXML
     private void openMaterial(ActionEvent event) {
+        openWindow("/fxmlfiles/userwindows/adminsfxmls/studymaterials/StudyMaterialWindow.fxml", "Study materials window");
+    }
+
+    @FXML
+    private void openDiscussion(ActionEvent event) {
+        openWindow("/fxmlfiles/userwindows/adminsfxmls/DiscussionWindow.fxml", "Discussion window");
+    }
+
+    private void openWindow(final String fxmlFilePath, final String title) {
         final StudyMaterial studyMaterial = materialsListView.getSelectionModel().getSelectedItem();
         if (studyMaterial == null) {
             Main.callAlertWindow("Warning", "Study material is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
         } else {
             CreateStudyMaterialsController.studyMatId = studyMaterial.getStudyMatId();
-            OpenNewWindow.openNewWindow("/fxmlfiles/adminsfxmls/studymaterials/StudyMaterialWindow.fxml", getClass(), false, "Study materials window", new Image("/images/admin_icon.png"));
+            OpenNewWindow.openNewWindow(fxmlFilePath, getClass(), false, title, new Image("/images/student_icon.png"));
         }
     }
 

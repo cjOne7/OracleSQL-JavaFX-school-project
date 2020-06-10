@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="553.0" prefWidth="844.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.adminscontrollers.discussionblock.DiscussionController">
+   <children>
+      <ListView fx:id="discussionsListView" layoutX="68.0" layoutY="62.0" onKeyPressed="#keyPressed" onKeyReleased="#keyRealesed" onMouseClicked="#mouseClicked" prefHeight="390.0" prefWidth="708.0" />
+      <Label alignment="CENTER" layoutX="307.0" layoutY="20.0" prefHeight="30.0" prefWidth="229.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878; -fx-background-radius: 5; -fx-border-radius: 5;" text="Discussion list">
+         <font>
+            <Font name="Castellar" size="18.0" />
+         </font></Label>
+      <Button fx:id="closeBtn" layoutX="707.0" layoutY="506.0" mnemonicParsing="false" onAction="#close" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="close">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <Button fx:id="openCommentsBtn" disable="true" layoutX="68.0" layoutY="506.0" mnemonicParsing="false" onAction="#openComments" prefWidth="180.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="Open comments">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <Button fx:id="createNewDiscussionBtn" layoutX="68.0" layoutY="462.0" mnemonicParsing="false" onAction="#createNewDiscussion" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="create a new discussion">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <Button fx:id="changeTitleOfDiscussionBtn" disable="true" layoutX="260.0" layoutY="506.0" mnemonicParsing="false" onAction="#changeTitleOfDiscussion" prefWidth="180.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="change title">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <Button fx:id="deleteDiscussionBtn" disable="true" layoutX="451.0" layoutY="506.0" mnemonicParsing="false" onAction="#deleteDiscussion" prefHeight="30.0" prefWidth="180.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="delete discussion">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

@@ -97,8 +97,16 @@ public class StudyMaterial {
         return subjectId;
     }
 
+    public int getNumberOfPages() {
+        return numberOfPages;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @NotNull
-    String getSubjectName() {
+    public String getSubjectName() {
         final DbManager dbManager = new DbManager();
         final String selectQuery = "SELECT NAME, ABBREVIATION FROM ST58310.SUBJECT WHERE SUBJECT_ID = ?";
         try {

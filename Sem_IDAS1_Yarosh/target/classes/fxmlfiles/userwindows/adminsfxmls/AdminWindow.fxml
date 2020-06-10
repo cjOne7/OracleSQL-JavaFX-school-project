@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.adminscontrollers.AdminController">
+   <children>
+      <Button layoutX="645.0" layoutY="402.0" mnemonicParsing="false" onAction="#openProfile" prefHeight="30.0" prefWidth="125.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="Profile">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="exitBtn" layoutX="645.0" layoutY="444.0" mnemonicParsing="false" onAction="#exitToMainScreen" prefHeight="30.0" prefWidth="126.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="Log out">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="38.0" layoutY="155.0" mnemonicParsing="false" onAction="#openSubjectManagement" prefHeight="30.0" prefWidth="223.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="subject management">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="39.0" layoutY="112.0" mnemonicParsing="false" onAction="#openAssignPrivileges" prefHeight="30.0" prefWidth="223.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="assign privileges">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <AnchorPane prefHeight="66.0" prefWidth="600.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label layoutX="248.0" layoutY="19.0" text="Administrator window">
+               <font>
+                  <Font name="Castellar" size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <Label alignment="CENTER" layoutX="39.0" layoutY="80.0" prefHeight="18.0" prefWidth="223.0" text="Work panel:">
+         <font>
+            <Font name="Castellar" size="16.0" />
+         </font>
+      </Label>
+      <Button layoutX="38.0" layoutY="199.0" mnemonicParsing="false" onAction="#openUsersWrittenSubjects" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="user's written subjects">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button layoutX="295.0" layoutY="199.0" mnemonicParsing="false" onAction="#createStudyMaterial" prefHeight="28.0" prefWidth="248.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="study material management">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font></Button>
+      <Button layoutX="295.0" layoutY="155.0" mnemonicParsing="false" onAction="#categoryManagement" prefHeight="28.0" prefWidth="248.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="category management">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="assignCategoryBtn" layoutX="295.0" layoutY="112.0" mnemonicParsing="false" onAction="#assignCategory" prefHeight="30.0" prefWidth="248.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="assign category">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

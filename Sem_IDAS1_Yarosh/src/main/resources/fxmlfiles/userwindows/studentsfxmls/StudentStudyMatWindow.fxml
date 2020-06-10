@@ -7,16 +7,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="580.0" prefWidth="814.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.studnetscontrollers.StudentStudyMatController">
    <children>
       <ListView fx:id="materialsListView" layoutX="19.0" layoutY="48.0" prefHeight="470.0" prefWidth="588.0" />
-      <Button fx:id="downloadFileBtn" layoutX="19.0" layoutY="537.0" mnemonicParsing="false" onAction="#downloadFile" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="download">
+      <Button fx:id="downloadFileBtn" disable="true" layoutX="19.0" layoutY="537.0" mnemonicParsing="false" onAction="#downloadFile" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="download">
          <font>
             <Font name="Castellar" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="openMaterialBtn" layoutX="200.0" layoutY="537.0" mnemonicParsing="false" onAction="#openMaterial" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open material">
+      <Button fx:id="openMaterialBtn" disable="true" layoutX="200.0" layoutY="537.0" mnemonicParsing="false" onAction="#openMaterial" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open material">
          <font>
             <Font name="Castellar" size="14.0" />
          </font>
@@ -32,5 +31,10 @@
             <Font name="Castellar" size="14.0" />
          </font>
       </Label>
+      <Button fx:id="openDiscussionBtn" layoutX="619.0" layoutY="487.0" mnemonicParsing="false" onAction="#openDiscussion" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open discussion">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
