@@ -5,15 +5,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import sample.TextConstraint;
 import sample.controllers.Main;
 import sample.controllers.MainWindowController;
 import sample.controllers.OpenNewWindow;
@@ -36,6 +34,7 @@ public class DiscussionController implements Initializable {
 
     private final DbManager dbManager = new DbManager();
     private ObservableList<Discussion> discussions = FXCollections.observableArrayList();
+    private final ObservableList<Integer> teacherSubjectsIds = FXCollections.observableArrayList();
 
     public static int discussionId;
 
@@ -79,20 +78,42 @@ public class DiscussionController implements Initializable {
     }
 
     private void disableAccordingToRights() throws SQLException {
-        final String selectQuery = "SELECT ROLE_ID FROM ST58310.ELSA_USER WHERE USER_ID = ?";
-        final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
+        final String selectRoleQuery = "SELECT ROLE_ID FROM ST58310.ELSA_USER WHERE USER_ID = ?";
+        final PreparedStatement selectRoleStatemnt = dbManager.getConnection().prepareStatement(selectRoleQuery);
         int userId = AdminController.curUserId;
         if (userId == 0) {
             userId = MainWindowController.curUserId;
         }
-        preparedStatement.setInt(1, userId);
-        final ResultSet resultSet = preparedStatement.executeQuery();
+        selectRoleStatemnt.setInt(1, userId);
+        final ResultSet resultSet = selectRoleStatemnt.executeQuery();
         if (resultSet.next()) {
             final int roleId = resultSet.getInt(ElsaUserColumns.ROLE_ID.toString());
             if (roleId == Role.STUDENT.getIndex()) {
                 createNewDiscussionBtn.setVisible(false);
                 changeTitleOfDiscussionBtn.setVisible(false);
                 deleteDiscussionBtn.setVisible(false);
+            } else if (roleId == Role.TEACHER.getIndex()) {
+                final String selectQuery1 = "SELECT SUBJECT_ID FROM ST58310.SUBJECT WHERE SUBJECT_ID " +
+                        "IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
+                final PreparedStatement preparedStatement1 = dbManager.getConnection().prepareStatement(selectQuery1);
+                preparedStatement1.setInt(1, userId);
+                final ResultSet resultSet1 = preparedStatement1.executeQuery();
+                while (resultSet1.next()) {
+                    final int subjectId = resultSet1.getInt(SubjectColumns.SUBJECT_ID.toString());
+                    teacherSubjectsIds.add(subjectId);
+                }
+                final String selectSubjectId = "SELECT SUBJECT_SUBJECT_ID FROM ST58310.STY_MTRL WHERE STUDY_MATERIAL_ID = ?";
+                final PreparedStatement preparedStatement2 = dbManager.getConnection().prepareStatement(selectSubjectId);
+                preparedStatement2.setInt(1, CreateStudyMaterialsController.studyMatId);
+                final ResultSet resultSet2 = preparedStatement2.executeQuery();
+                if (resultSet2.next()) {
+                    final int subjectId = resultSet2.getInt(StudyMatColumns.SUBJECT_SUBJECT_ID.getColumnName());
+                    if (teacherSubjectsIds.contains(subjectId)) {
+                        changeVisible(true);
+                    } else {
+                        changeVisible(false);
+                    }
+                }
             }
         }
     }
@@ -107,36 +128,45 @@ public class DiscussionController implements Initializable {
         deleteDiscussionBtn.setDisable(state);
     }
 
+    private void changeVisible(final boolean state) {
+        createNewDiscussionBtn.setVisible(state);
+        changeTitleOfDiscussionBtn.setVisible(state);
+        deleteDiscussionBtn.setVisible(state);
+    }
+
     @FXML
     private void createNewDiscussion(ActionEvent event) {
         final String title = openTextInputDialog();
+        if (title.length() > 50) {
+            Main.callAlertWindow("Error",
+                    "Title is longer than allowed! Your title's length: "
+                            + title.length() + " (50 is max).",
+                    Alert.AlertType.ERROR, "/images/warning_icon.png");
+            return;
+        }
         if (!title.isEmpty()) {
             try {
-                if (checkForUnique(title)) {
-                    final String insertQuery = "INSERT INTO ST58310.DISCUSSION (TITLE, STY_MTRL_STUDY_MATERIAL_ID, DISCUSSION_CREATER_ID) VALUES (?,?,?)";
+                final String insertQuery = "INSERT INTO ST58310.DISCUSSION (TITLE, STY_MTRL_STUDY_MATERIAL_ID, DISCUSSION_CREATER_ID) VALUES (?,?,?)";
 
-                    PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(insertQuery);
-                    preparedStatement.setString(1, title);
-                    preparedStatement.setInt(2, CreateStudyMaterialsController.studyMatId);
-                    int userId = AdminController.curUserId;
-                    if (userId == 0) {
-                        userId = MainWindowController.curUserId;
-                    }
-                    preparedStatement.setInt(3, userId);
-                    preparedStatement.execute();
+                PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(insertQuery);
+                preparedStatement.setString(1, title);
+                preparedStatement.setInt(2, CreateStudyMaterialsController.studyMatId);
+                int userId = AdminController.curUserId;
+                if (userId == 0) {
+                    userId = MainWindowController.curUserId;
+                }
+                preparedStatement.setInt(3, userId);
+                preparedStatement.execute();
 
-                    final String selectQuery = "SELECT MAX(DISCUSSION_ID) AS DISCUSSION_ID FROM ST58310.DISCUSSION";
-                    preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
-                    final ResultSet resultSet = preparedStatement.executeQuery();
+                final String selectQuery = "SELECT MAX(DISCUSSION_ID) AS DISCUSSION_ID FROM ST58310.DISCUSSION";
+                preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
+                final ResultSet resultSet = preparedStatement.executeQuery();
 
-                    if (resultSet.next()) {
-                        discussionId = resultSet.getInt(DiscussionColumns.DISCUSSION_ID.toString());
-                        final Discussion discussion = new Discussion(discussionId, title, userId, CreateStudyMaterialsController.studyMatId);
-                        discussions.add(discussion);
-                        discussionsListView.getSelectionModel().clearSelection();
-                    }
-                } else {
-                    Main.callAlertWindow("Warning", "Discussion with that title had already been created!", Alert.AlertType.WARNING, "/images/warning_icon.png");
+                if (resultSet.next()) {
+                    discussionId = resultSet.getInt(DiscussionColumns.DISCUSSION_ID.toString());
+                    final Discussion discussion = new Discussion(discussionId, title, userId, CreateStudyMaterialsController.studyMatId);
+                    discussions.add(discussion);
+                    discussionsListView.getSelectionModel().clearSelection();
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -145,14 +175,6 @@ public class DiscussionController implements Initializable {
         if (discussions.size() >= 1) {
             changeDisableAllBtn(false);
         }
-    }
-
-    private boolean checkForUnique(final String title) throws SQLException {
-        final String selectQuery = "SELECT TITLE FROM ST58310.DISCUSSION WHERE UPPER(TITLE) LIKE UPPER(?)";
-        final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
-        preparedStatement.setString(1, title);
-        final ResultSet resultSet = preparedStatement.executeQuery();
-        return !resultSet.next();
     }
 
     @FXML

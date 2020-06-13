@@ -37,10 +37,6 @@ public class Discussion {
         return title;
     }
 
-    public int getStudyMaterialId() {
-        return studyMaterialId;
-    }
-
     public int getDiscussionCreaterId() {
         return discussionCreaterId;
     }

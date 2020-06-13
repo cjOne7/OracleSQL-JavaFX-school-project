@@ -9,15 +9,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class StudyMaterial {
     private int studyMatId;
     private String fileName;
-    private File theFile;
     private String fileType;
     private Date dateOfCreation;
     private String creater;
@@ -108,13 +105,13 @@ public class StudyMaterial {
     @NotNull
     public String getSubjectName() {
         final DbManager dbManager = new DbManager();
-        final String selectQuery = "SELECT NAME, ABBREVIATION FROM ST58310.SUBJECT WHERE SUBJECT_ID = ?";
+        final String selectQuery = "SELECT SUBJECT_NAME, ABBREVIATION FROM ST58310.SUBJECT WHERE SUBJECT_ID = ?";
         try {
             final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             preparedStatement.setInt(1, subjectId);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                final String name = resultSet.getString(SubjectColumns.NAME.toString());
+                final String name = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
                 final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
                 return name + '/' + abbreviation;
             } else {

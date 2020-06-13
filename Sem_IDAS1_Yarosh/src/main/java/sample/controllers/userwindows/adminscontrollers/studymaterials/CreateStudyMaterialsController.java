@@ -13,6 +13,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import sample.SelectStudyMaterials;
+import sample.TextConstraint;
 import sample.controllers.Main;
 import sample.controllers.OpenNewWindow;
 import sample.controllers.userwindows.adminscontrollers.AdminController;
@@ -53,6 +54,8 @@ public class CreateStudyMaterialsController implements Initializable {
     @FXML
     private Button openMaterialBtn;
     @FXML
+    private Button openQuizBtn;
+    @FXML
     private Button openDiscussionBtn;
     @FXML
     private Button closeBtn;
@@ -86,8 +89,14 @@ public class CreateStudyMaterialsController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        descriptionTextArea.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(500)));
+        numberOfPagesTextField.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(38)));
+
         subjectList.forEach(subject -> subjectComboBox.getItems().add(subject.toComboBoxString()));
-        subjectComboBox.setValue(subjectList.get(0).toComboBoxString());
+        if (subjectList.size() >= 1) {
+            subjectComboBox.setValue(subjectList.get(0).toComboBoxString());
+        }
 
         if (studyMaterials.size() >= 1) {
             changeDisable(false);
@@ -101,6 +110,7 @@ public class CreateStudyMaterialsController implements Initializable {
         openMaterialBtn.setDisable(state);
         updateAdditionalInfoCheckBox.setDisable(state);
         openDiscussionBtn.setDisable(state);
+        openQuizBtn.setDisable(state);
     }
 
     @FXML
@@ -109,8 +119,6 @@ public class CreateStudyMaterialsController implements Initializable {
         if (file != null) {
             try {
                 insertInStyMtrl();
-                descriptionTextArea.clear();
-                numberOfPagesTextField.clear();
             } catch (SQLException | FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -125,6 +133,13 @@ public class CreateStudyMaterialsController implements Initializable {
     private void insertInStyMtrl() throws SQLException, FileNotFoundException {
         final String fileName = getFileName(file.getName());
         final String fileType = getFileType(file.getName());
+        if (fileName.length() > 50 || fileType.length() > 5) {
+            Main.callAlertWindow("Error",
+                    "File name or file type is longer than allowed! Your file name's length: "
+                            + fileName.length() + " (50 is max), file type's length: " + fileType.length() + " (5 is max)",
+                    Alert.AlertType.ERROR, "/images/warning_icon.png");
+            return;
+        }
 
         final String insertQuery = "INSERT INTO ST58310.STY_MTRL (FILE_NAME, THE_FILE, FILE_TYPE, CREATER, NUMBER_OF_PAGES, DESCRIPTION, SUBJECT_SUBJECT_ID) VALUES (?,?,?,?,?,?,?)";
         final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(insertQuery);
@@ -157,6 +172,8 @@ public class CreateStudyMaterialsController implements Initializable {
         final StudyMaterial studyMaterial = new StudyMaterial(subjectId, fileName, fileType, creator,
                 numberOfPages.isEmpty() ? 0 : Integer.parseInt(numberOfPages), description, getSubjectId());
         studyMaterials.add(studyMaterial);
+        descriptionTextArea.clear();
+        numberOfPagesTextField.clear();
     }
 
     private int getSubjectId() {
@@ -207,7 +224,24 @@ public class CreateStudyMaterialsController implements Initializable {
     private void deleteMaterial(ActionEvent event) {
         final StudyMaterial studyMaterial = materialsListView.getSelectionModel().getSelectedItem();
         selectStudyMaterials.deleteMaterial(studyMaterial);
-        studyMaterials.removeAll(studyMaterials.stream().filter(studyMat -> studyMat.getStudyMatId() == studyMaterial.getStudyMatId()).collect(Collectors.toList()));
+        studyMaterials.remove(studyMaterial);
+
+        try {
+            DbManager.removeRemainingDataFromDB(
+                    "SELECT COMMENT_ID FROM ST58310.COMMENT_DISCUSSION " +
+                            "RIGHT JOIN THE_COMMENT ON COMMENT_DISCUSSION.THE_COMMENT_COMMENT_ID = THE_COMMENT.COMMENT_ID " +
+                            "WHERE COMMENT_ID IS NOT NULL AND THE_COMMENT_COMMENT_ID IS NULL",
+                    "DELETE FROM ST58310.THE_COMMENT WHERE COMMENT_ID = ?",
+                    CommentColumns.COMMENT_ID.toString());
+            DbManager.removeRemainingDataFromDB(
+                    "SELECT QUESTION_QUESTION_ID, QUESTION_ID FROM ST58310.QUIZZES_QUESTION " +
+                            "RIGHT JOIN QUESTION ON QUIZZES_QUESTION.QUESTION_QUESTION_ID = QUESTION.QUESTION_ID " +
+                            "WHERE QUESTION_ID IS NOT NULL AND QUESTION_QUESTION_ID IS NULL",
+                    "DELETE FROM ST58310.QUESTION WHERE QUESTION_ID = ?",
+                    QuestionColumns.QUESTION_ID.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         if (studyMaterials.isEmpty()) {
             changeDisable(true);
@@ -355,6 +389,11 @@ public class CreateStudyMaterialsController implements Initializable {
             studyMatId = studyMaterial.getStudyMatId();
             OpenNewWindow.openNewWindow(fxmlFilePath, getClass(), false, title, new Image("/images/admin_icon.png"));
         }
+    }
+
+    @FXML
+    private void openQuiz(ActionEvent event) {
+        openWindow("/fxmlfiles/userwindows/adminsfxmls/quizmanagement/QuizManagementWindow.fxml", "Quiz management window");
     }
 
     @FXML

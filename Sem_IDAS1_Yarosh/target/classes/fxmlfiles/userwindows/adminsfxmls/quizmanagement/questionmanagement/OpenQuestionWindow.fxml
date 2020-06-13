@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<ScrollPane prefHeight="467.0" prefWidth="719.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.adminscontrollers.quizmanagement.questionmanagement.OpenQuestionController">
+  <content>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="467.0" prefWidth="718.0" style="-fx-background-color: #80ffff;">
+         <children>
+            <Text fx:id="questionText" layoutX="7.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="690.9366989135742">
+               <font>
+                  <Font name="Century Gothic" size="16.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+  </content>
+</ScrollPane>

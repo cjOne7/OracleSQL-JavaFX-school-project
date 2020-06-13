@@ -19,6 +19,7 @@ public class Main extends Application {
         final Parent root = FXMLLoader.load(getClass().getResource("/fxmlfiles/MainWindow.fxml"));
         primaryStage.setTitle("ELSA");
 
+        //if window close request was sent
         primaryStage.setOnCloseRequest((event) -> {
             final Optional<ButtonType> op = callAlertWindow("Exiting window", "Are you sure that you want to close app?", Alert.AlertType.CONFIRMATION, "/images/exit_icon.png");
             if (op.get().equals(ButtonType.OK)) {
@@ -37,7 +38,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    @NotNull
+    @NotNull//create alert window
     public static Optional<ButtonType> callAlertWindow(
             final String titleText,
             final String contextText,

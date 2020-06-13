@@ -54,6 +54,11 @@ public class AdminController implements Initializable {
     }
 
     @FXML
+    private void questionCatManagement(ActionEvent event) {
+        OpenNewWindow.openNewWindow("/fxmlfiles/userwindows/adminsfxmls/questioncatmanagement/QuestionCatManagerWindow.fxml", getClass(), false, "Create question category window", new Image("/images/admin_icon.png"));
+    }
+
+    @FXML
     private void openProfile(ActionEvent event) {
         MainWindowController.curUserId = curUserId; //вернуть прежний айди текущего авторизированного пользователя для просмотра его профиля
         OpenNewWindow.openNewWindow("/fxmlfiles/UserProfileWindow.fxml", getClass(), false, "Profile window", new Image("/images/profile_icon.png"));

@@ -5,10 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -32,14 +29,19 @@ import java.util.stream.Collectors;
 
 public class CommentsController implements Initializable {
 
+    private static final int MAX_COMMENT_LENGTH = 500;
+
     private final DbManager dbManager = new DbManager();
     private ObservableList<Comment> comments = FXCollections.observableArrayList();
-    private ObservableList<Integer> students = FXCollections.observableArrayList();
 
     @FXML
     private TextArea commentTextArea;
     @FXML
     private ListView<Comment> commentsListView;
+    @FXML
+    private Label leftCharactersLabel;
+    @FXML
+    private Label staticMessageLabel;
     @FXML
     private Button deleteCommentBtn;
     @FXML
@@ -49,6 +51,19 @@ public class CommentsController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         commentsListView.setItems(comments);
         commentsListView.setStyle(StylesEnum.FONT_STYLE.getStyle());
+
+        commentTextArea.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                leftCharactersLabel.setText("");
+                staticMessageLabel.setVisible(false);
+            } else {
+                staticMessageLabel.setVisible(true);
+                leftCharactersLabel.setText(500 - newValue.length() + "");
+            }
+            if (newValue.length() == MAX_COMMENT_LENGTH + 1) {
+                commentTextArea.setText(oldValue);
+            }
+        });
 
         try {
             final String selectQuery = "SELECT * FROM ST58310.THE_COMMENT WHERE COMMENT_ID IN (SELECT THE_COMMENT_COMMENT_ID FROM ST58310.COMMENT_DISCUSSION WHERE DISCUSSION_DISCUSSION_ID = ?) ORDER BY COMMENT_ID";
@@ -123,7 +138,7 @@ public class CommentsController implements Initializable {
                 preparedStatement.execute();
 
                 commentsListView.getSelectionModel().clearSelection();
-                comments.removeAll(comments.stream().filter(comment1 -> comment1.getCommentId() == comment.getCommentId()).collect(Collectors.toList()));
+                comments.remove(comment);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -168,7 +183,7 @@ public class CommentsController implements Initializable {
                             }
                             break;
                         case TEACHER:
-                            students = User.fillStudentsList().stream().map(User::getUserId).collect(Collectors.toCollection(FXCollections::observableArrayList));
+                            ObservableList<Integer> students = User.fillStudentsList().stream().map(userSubject -> userSubject.getUser().getUserId()).collect(Collectors.toCollection(FXCollections::observableArrayList));
                             if (comment.getCommentCreaterId() == userId || students.contains(comment.getCommentCreaterId())) {
                                 deleteCommentBtn.setDisable(false);
                             } else {

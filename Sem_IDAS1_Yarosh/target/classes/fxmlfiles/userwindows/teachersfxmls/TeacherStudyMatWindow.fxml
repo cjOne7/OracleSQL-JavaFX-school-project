@@ -129,6 +129,11 @@
                   <Font name="Castellar" size="12.0" />
                </font>
             </CheckBox>
+            <Button fx:id="openQuizBtn" layoutX="714.0" layoutY="519.0" mnemonicParsing="false" onAction="#openQuiz" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open quiz">
+               <font>
+                  <Font name="Castellar" size="14.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
       <Button fx:id="openDiscussionBtn" layoutX="724.0" layoutY="573.0" mnemonicParsing="false" onAction="#openDiscussion" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open discussion">

@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import sample.Checker;
 import sample.SelectStudyMaterials;
 import sample.controllers.Main;
 import sample.controllers.OpenNewWindow;
@@ -18,10 +19,7 @@ import sample.controllers.userwindows.adminscontrollers.studymaterials.CreateStu
 import sample.databasemanager.DbManager;
 import sample.dbtableclasses.StudyMaterial;
 import sample.dbtableclasses.Subject;
-import sample.enums.ElsaUserColumns;
-import sample.enums.StudyMatColumns;
-import sample.enums.StylesEnum;
-import sample.enums.SubjectColumns;
+import sample.enums.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,6 +59,8 @@ public class TeacherStudyMatController implements Initializable {
     @FXML
     private Button openDiscussionBtn;
     @FXML
+    private Button openQuizBtn;
+    @FXML
     private Button closeBtn;
     @FXML
     private ComboBox<String> subjectComboBox;
@@ -76,6 +76,7 @@ public class TeacherStudyMatController implements Initializable {
         materialsListView.setStyle(StylesEnum.FONT_STYLE.getStyle());
         subjectComboBox.setStyle(StylesEnum.COMBO_BOX_STYLE.getStyle());
 
+        //set listener to sort study materials
         subjectComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             sortedList = studyMaterials.stream()
                     .filter(studyMaterial -> getSubjectId() == studyMaterial.getSubjectId())
@@ -85,8 +86,8 @@ public class TeacherStudyMatController implements Initializable {
             if (teacherSubjectIdList.contains(getSubjectId())) {
                 changeDisableAllBtn(false);
             } else {
-                changeDisableAllBtn(true);//задизейблить все кнопки
-                changeDisable(false);//раздизейблить только на скачивание и просмотр
+                changeDisableAllBtn(true);//disable all buttons
+                changeDisable(false);//to enable buttons just for downloading and viewing
             }
         });
 
@@ -101,15 +102,16 @@ public class TeacherStudyMatController implements Initializable {
                 teacherSubjectIdList.add(subjectId);
             }
 
-            subjectList = Subject.getAllSubjectList();
-            studyMaterials = selectStudyMaterials.getStudyMaterials();
+            subjectList = Subject.getAllSubjectList();//get all subjects list from DB
+            studyMaterials = selectStudyMaterials.getStudyMaterials();//get all study materials from DB
             materialsListView.setItems(studyMaterials);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+        //fill combobox using special toString() method
         subjectList.forEach(subject -> subjectComboBox.getItems().add(subject.toComboBoxString()));
-        subjectComboBox.setValue(subjectList.get(1).toComboBoxString());
+        subjectComboBox.setValue(subjectList.get(0).toComboBoxString());
     }
 
     private int getSubjectId() {
@@ -136,6 +138,8 @@ public class TeacherStudyMatController implements Initializable {
     private void changeDisable(final boolean state) {
         downloadFileBtn.setDisable(state);
         openMaterialBtn.setDisable(state);
+        openDiscussionBtn.setDisable(state);
+        openQuizBtn.setDisable(state);
     }
 
     @FXML
@@ -143,6 +147,22 @@ public class TeacherStudyMatController implements Initializable {
         final StudyMaterial studyMaterial = materialsListView.getSelectionModel().getSelectedItem();
         selectStudyMaterials.deleteMaterial(studyMaterial);
         studyMaterials.removeAll(studyMaterials.stream().filter(studyMat -> studyMat.getStudyMatId() == studyMaterial.getStudyMatId()).collect(Collectors.toList()));
+        try {
+            DbManager.removeRemainingDataFromDB(
+                    "SELECT COMMENT_ID FROM ST58310.COMMENT_DISCUSSION " +
+                            "RIGHT JOIN THE_COMMENT ON COMMENT_DISCUSSION.THE_COMMENT_COMMENT_ID = THE_COMMENT.COMMENT_ID " +
+                            "WHERE COMMENT_ID IS NOT NULL AND THE_COMMENT_COMMENT_ID IS NULL",
+                    "DELETE FROM ST58310.THE_COMMENT WHERE COMMENT_ID = ?",
+                    CommentColumns.COMMENT_ID.toString());
+            DbManager.removeRemainingDataFromDB(
+                    "SELECT QUESTION_QUESTION_ID, QUESTION_ID FROM ST58310.QUIZZES_QUESTION " +
+                            "RIGHT JOIN QUESTION ON QUIZZES_QUESTION.QUESTION_QUESTION_ID = QUESTION.QUESTION_ID " +
+                            "WHERE QUESTION_ID IS NOT NULL AND QUESTION_QUESTION_ID IS NULL",
+                    "DELETE FROM ST58310.QUESTION WHERE QUESTION_ID = ?",
+                    QuestionColumns.QUESTION_ID.toString());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         updateCurrentDisplayedValues();
         if (studyMaterials.isEmpty()) {
             changeDisableAllBtn(true);
@@ -217,7 +237,7 @@ public class TeacherStudyMatController implements Initializable {
         prepareIntField(preparedStatement, numberOfPages, 5);
 
         final String description = descriptionTextArea.getText().trim();
-        prepareStringField(preparedStatement, description, 6);
+        Checker.checkTextField(description.isEmpty(), 6, description, preparedStatement);
 
         preparedStatement.setInt(7, getSubjectId());
         preparedStatement.execute();
@@ -277,14 +297,6 @@ public class TeacherStudyMatController implements Initializable {
         }
     }
 
-    private void prepareStringField(final PreparedStatement preparedStatement, @NotNull final String text, final int index) throws SQLException {
-        if (text.trim().isEmpty()) {
-            preparedStatement.setNull(index, Types.NULL);
-        } else {
-            preparedStatement.setString(index, text);
-        }
-    }
-
     @FXML
     private void updateMaterial(ActionEvent event) {
         final StudyMaterial studyMaterial = materialsListView.getSelectionModel().getSelectedItem();
@@ -334,7 +346,7 @@ public class TeacherStudyMatController implements Initializable {
         preparedStatement.setString(indexes[1], getNameAndSurname());
 
         final String description = descriptionTextArea.getText().trim();
-        prepareStringField(preparedStatement, description, indexes[2]);
+        Checker.checkTextField(description.isEmpty(),indexes[2], description, preparedStatement);
 
         preparedStatement.setInt(indexes[3], getSubjectId());
         preparedStatement.setInt(indexes[4], studyMaterial.getStudyMatId());
@@ -385,6 +397,11 @@ public class TeacherStudyMatController implements Initializable {
             CreateStudyMaterialsController.studyMatId = studyMaterial.getStudyMatId();
             OpenNewWindow.openNewWindow(fxmlFilePath, getClass(), false, title, new Image("/images/admin_icon.png"));
         }
+    }
+
+    @FXML
+    private void openQuiz(ActionEvent event) {
+        openWindow("/fxmlfiles/userwindows/adminsfxmls/quizmanagement/QuizManagementWindow.fxml", "Quiz management window");
     }
 
     @FXML

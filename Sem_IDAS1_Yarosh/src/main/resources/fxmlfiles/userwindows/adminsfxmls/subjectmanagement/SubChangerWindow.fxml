@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="586.0" prefWidth="526.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.adminscontrollers.subjectmanagement.SubChangerController">
+<AnchorPane prefHeight="586.0" prefWidth="526.0" style="-fx-background-color: #80ffff;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.userwindows.adminscontrollers.subjectmanagement.SubjectChangerController">
    <children>
       <GridPane layoutX="10.0" layoutY="45.0" prefHeight="466.0" prefWidth="514.0">
          <columnConstraints>
@@ -94,7 +94,7 @@
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
-                  <Spinner fx:id="yearSpinner" prefWidth="150.0" />
+                  <Spinner fx:id="yearSpinner" onScroll="#scroll" prefWidth="150.0" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
@@ -108,7 +108,7 @@
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <Spinner fx:id="semesterSpinner" prefWidth="150.0" />
+                  <Spinner fx:id="semesterSpinner" onScroll="#scroll" prefWidth="150.0" />
                </children>
             </FlowPane>
             <FlowPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">

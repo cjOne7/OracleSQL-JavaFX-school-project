@@ -21,24 +21,15 @@ public class Comment {
         this.commentCreaterId = commentCreaterId;
     }
 
-    public Comment(final int commentId, final String commentText) {
-        this.commentId = commentId;
-        this.commentText = commentText;
-    }
-
     public int getCommentId() {
         return commentId;
-    }
-
-    public String getCommentText() {
-        return commentText;
     }
 
     public int getCommentCreaterId() {
         return commentCreaterId;
     }
 
-    @NotNull
+    @NotNull//get user's name, surname and login by id
     private String getUserName() {
         final DbManager dbManager = new DbManager();
         final String selectQuery = "SELECT NAME, SURNAME, LOGIN FROM ST58310.ELSA_USER WHERE USER_ID = ?";

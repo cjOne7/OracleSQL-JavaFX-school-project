@@ -101,7 +101,7 @@
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
-                  <Spinner fx:id="yearSpinner" prefWidth="150.0" />
+                  <Spinner fx:id="yearSpinner" onScroll="#scroll" prefWidth="150.0" />
                </children>
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
@@ -115,7 +115,7 @@
             </FlowPane>
             <FlowPane alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <children>
-                  <Spinner fx:id="semesterSpinner" prefWidth="150.0" />
+                  <Spinner fx:id="semesterSpinner" onScroll="#scroll" prefWidth="150.0" />
                </children>
             </FlowPane>
             <FlowPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
@@ -181,7 +181,7 @@
             <Font name="Castellar" size="16.0" />
          </font>
       </Label>
-      <Spinner fx:id="yearFilterSpinner" disable="true" layoutX="625.0" layoutY="66.0" />
-      <Spinner fx:id="semesterFilterSpinner" disable="true" layoutX="940.0" layoutY="66.0" />
+      <Spinner fx:id="yearFilterSpinner" disable="true" layoutX="625.0" layoutY="66.0" onScroll="#scroll" />
+      <Spinner fx:id="semesterFilterSpinner" disable="true" layoutX="940.0" layoutY="66.0" onScroll="#scroll" />
    </children>
 </AnchorPane>

@@ -48,12 +48,13 @@ public class StudentWindowController implements Initializable {
         changeStyleAndSetItemsToListView(allSubjectsListView, allSubjects);
 
         try {
-            final String selectAllAvailableSubjects = "SELECT * from ST58310.SUBJECT order by YEAR, SEMESTER";
+            //get all subjects
+            final String selectAllAvailableSubjects = "SELECT * FROM ST58310.SUBJECT ORDER BY YEAR, SEMESTER";
             final PreparedStatement selectAllSubjects = dbManager.getConnection().prepareStatement(selectAllAvailableSubjects);
             final ResultSet allSubjects = selectAllSubjects.executeQuery();
             fillObservableList(allSubjects, this.allSubjects);
 
-            final String selectWrittenSubjects = "SELECT * FROM st58310.subject WHERE subject_id IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
+            final String selectWrittenSubjects = "SELECT * FROM ST58310.SUBJECT WHERE SUBJECT_ID IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
             final PreparedStatement selectWrittenSubjectsStatement = dbManager.getConnection().prepareStatement(selectWrittenSubjects);
             selectWrittenSubjectsStatement.setInt(1, MainWindowController.curUserId);
             final ResultSet allWrittenSubjects = selectWrittenSubjectsStatement.executeQuery();
@@ -76,7 +77,7 @@ public class StudentWindowController implements Initializable {
     private void fillObservableList(@NotNull final ResultSet resultSet, final ObservableList<Subject> observableList) throws SQLException {
         while (resultSet.next()) {
             final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-            final String name = resultSet.getString(SubjectColumns.NAME.toString());
+            final String name = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
             final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
             final int credits = resultSet.getInt(SubjectColumns.CREDITS.toString());
             final int semester = resultSet.getInt(SubjectColumns.SEMESTER.toString());
@@ -110,7 +111,7 @@ public class StudentWindowController implements Initializable {
     @FXML
     private void writeSubject(ActionEvent event) {
         final Subject subject = allSubjectsListView.getSelectionModel().getSelectedItem();
-        if (subject == null) {
+        if (subject == null) {//if subject is not choosen
             Main.callAlertWindow("Warning", "Subject is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
         } else {
             final long count = writtenSubjects.stream().filter(sub -> sub.getSubjectId() == subject.getSubjectId()).count();
@@ -118,6 +119,7 @@ public class StudentWindowController implements Initializable {
                 writtenSubjects.add(subject);
                 execQueryForUserSubject("INSERT INTO ST58310.USER_SUBJECT VALUES (?,?)", subject);
             } else {
+                //if student have already written this subject
                 Main.callAlertWindow("Warning", "Subject have been already written!", Alert.AlertType.WARNING, "/images/warning_icon.png");
             }
         }
@@ -151,5 +153,4 @@ public class StudentWindowController implements Initializable {
     private void logOut(ActionEvent event) {
         MainWindowController.openMainStage(logOutBtn);
     }
-
 }

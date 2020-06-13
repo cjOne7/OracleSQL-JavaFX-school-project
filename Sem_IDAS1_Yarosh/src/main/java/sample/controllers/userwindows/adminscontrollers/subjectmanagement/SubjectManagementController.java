@@ -7,15 +7,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import org.jetbrains.annotations.NotNull;
-import sample.Shake;
+import sample.Checker;
+import sample.Cosmetic;
+import sample.TextConstraint;
 import sample.controllers.Main;
 import sample.controllers.OpenNewWindow;
 import sample.databasemanager.DbManager;
 import sample.dbtableclasses.Subject;
-import sample.enums.StylesEnum;
-import sample.enums.SubjectColumns;
+import sample.enums.*;
 
 import java.net.URL;
 import java.sql.*;
@@ -24,6 +26,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static sample.Checker.checkTextField;
+import static sample.Cosmetic.changeLabelAttributes;
+import static sample.Cosmetic.changeTextFieldStyle;
 
 public class SubjectManagementController implements Initializable {
 
@@ -88,18 +94,15 @@ public class SubjectManagementController implements Initializable {
         });
         subjectNameField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, subjectNameField, StylesEnum.EMPTY_STRING.getStyle()));
         abbreviationField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(newValue, abbreviationField, StylesEnum.EMPTY_STRING.getStyle()));
-//        example();
 
-        if (allSubjects.size() >= 1){
+        subjectNameField.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(50)));
+        abbreviationField.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(10)));
+        creditsField.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(38)));
+        descriptionTextArea.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(500)));
+
+        if (allSubjects.size() >= 1) {
             changeDisable(false);
         }
-    }
-
-    private void example() {
-        subjectNameField.setText("Matan");
-        abbreviationField.setText("Mat");
-        creditsField.setText("6");
-        yearSpinner.getValueFactory().setValue(3);
     }
 
     private void setFilterListenerOnSpinner(@NotNull final Spinner<Integer> spinner) {
@@ -123,21 +126,21 @@ public class SubjectManagementController implements Initializable {
 
     @FXML
     private void createSubject(ActionEvent event) {
-        final String insertQuery = "INSERT INTO ST58310.SUBJECT (NAME, ABBREVIATION, CREDITS, SEMESTER, DESCRIPTION, YEAR) VALUES (?,?,?,?,?,?)";
+        final String insertQuery = "INSERT INTO ST58310.SUBJECT (SUBJECT_NAME, ABBREVIATION, CREDITS, SEMESTER, DESCRIPTION, YEAR) VALUES (?,?,?,?,?,?)";
         try {
             preparedStatement = dbManager.getConnection().prepareStatement(insertQuery);
             final List<Boolean> resultList = writeNotNullFieldsInList();
             if (resultList.contains(true)) {//если хоть одно обязательное поле пустое
                 for (int i = 0; i < textFieldList.size(); i++) {
                     if (resultList.get(i)) {
-                        Shake.shake(textFieldList.get(i));
+                        Cosmetic.shake(textFieldList.get(i));
                         textFieldList.get(i).setStyle(StylesEnum.ERROR_STYLE.getStyle());
                     }
                 }
                 changeLabelAttributes(createSubjectMesLabel, "Fields with * have to be filled!", Color.RED);
             } else {
                 if (checkForUnique()) {
-                    preparedStatement.setString(SubjectColumns.NAME.getColumnIndex(), subjectNameField.getText().trim());
+                    preparedStatement.setString(SubjectColumns.SUBJECT_NAME.getColumnIndex(), subjectNameField.getText().trim());
                     preparedStatement.setString(SubjectColumns.ABBREVIATION.getColumnIndex(), abbreviationField.getText().trim());
                     preparedStatement.setInt(SubjectColumns.CREDITS.getColumnIndex(), Integer.parseInt(creditsField.getText().trim()));
                     preparedStatement.setInt(SubjectColumns.SEMESTER.getColumnIndex(), semesterSpinner.getValue());
@@ -166,12 +169,12 @@ public class SubjectManagementController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if (allSubjects.size() >= 1){
+        if (allSubjects.size() >= 1) {
             changeDisable(false);
         }
     }
 
-    private void changeDisable(final boolean state){
+    private void changeDisable(final boolean state) {
         deleteSubjectBtn.setDisable(state);
         changeSubjectBtn.setDisable(state);
         yearFilterSpinner.setDisable(state);
@@ -181,7 +184,7 @@ public class SubjectManagementController implements Initializable {
     private boolean checkForUnique() throws SQLException {
         final String name = subjectNameField.getText().trim();
         final String abbreviation = abbreviationField.getText().trim();
-        final String selectQuery = "SELECT NAME, ABBREVIATION FROM ST58310.SUBJECT WHERE UPPER(NAME) like UPPER(?) AND UPPER(ABBREVIATION) like UPPER(?)";
+        final String selectQuery = "SELECT SUBJECT_NAME, ABBREVIATION FROM ST58310.SUBJECT WHERE UPPER(SUBJECT_NAME) like UPPER(?) AND UPPER(ABBREVIATION) like UPPER(?)";
         final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
         preparedStatement.setString(1, name);
         preparedStatement.setString(2, abbreviation);
@@ -189,7 +192,7 @@ public class SubjectManagementController implements Initializable {
         if (resultSet.next()) {
             changeLabelAttributes(createSubjectMesLabel, "Subject's name or abbreviation must be unique!", Color.RED);
             doAnimationOnTextField(textFieldList.get(SubjectColumns.ABBREVIATION.getColumnIndex() - 1));
-            doAnimationOnTextField(textFieldList.get(SubjectColumns.NAME.getColumnIndex() - 1));
+            doAnimationOnTextField(textFieldList.get(SubjectColumns.SUBJECT_NAME.getColumnIndex() - 1));
             return false;
         } else {
             return true;
@@ -198,13 +201,7 @@ public class SubjectManagementController implements Initializable {
 
     private void doAnimationOnTextField(@NotNull final TextField textField) {
         textField.setStyle(StylesEnum.ERROR_STYLE.getStyle());
-        Shake.shake(textField);
-    }
-
-    private void changeTextFieldStyle(@NotNull final String newValue, final TextField textField, final String style) {
-        if (!newValue.isEmpty()) {
-            textField.setStyle(style);
-        }
+        Cosmetic.shake(textField);
     }
 
     private void fillSubjectsListView(final ObservableList<Subject> observableList) {
@@ -221,13 +218,9 @@ public class SubjectManagementController implements Initializable {
         }
     }
 
-    private boolean checkTextField(@NotNull final TextField textField) {
-        return textField.getText().trim().isEmpty();
-    }
-
     @NotNull
     private List<Boolean> writeNotNullFieldsInList() {
-        final List<Boolean> resultList = new ArrayList<>();// создать и заполнить лист результатами проверок значений что обязательно должны быть
+        final List<Boolean> resultList = new ArrayList<>();// create and fill in a sheet with the results of checking values that must be
         resultList.add(checkTextField(subjectNameField));//0
         resultList.add(checkTextField(abbreviationField));//1
         resultList.add(checkTextField(creditsField));//2
@@ -243,21 +236,8 @@ public class SubjectManagementController implements Initializable {
         return textFields;
     }
 
-    private void changeLabelAttributes(@NotNull final Label label, final String text, final Color textColor) {
-        label.setText(text);
-        label.setTextFill(textColor);
-    }
-
     private void checkNullPossibleFields() throws SQLException {
-        checkTextField(descriptionTextArea.getText().trim().isEmpty(), SubjectColumns.DESCRIPTION.getColumnIndex(), descriptionTextArea.getText().trim());
-    }
-
-    private void checkTextField(final boolean state, final int columnIndex, final String text) throws SQLException {
-        if (state) {
-            preparedStatement.setNull(columnIndex, Types.NULL);
-        } else {
-            preparedStatement.setString(columnIndex, text);
-        }
+        checkTextField(descriptionTextArea.getText().trim().isEmpty(), 5, descriptionTextArea.getText().trim(), preparedStatement);
     }
 
     private void initializeSpinner(@NotNull final Spinner<Integer> integerSpinner, final int startValue, final int endValue) {
@@ -282,11 +262,24 @@ public class SubjectManagementController implements Initializable {
                 preparedStatement.setInt(1, subject.getSubjectId());
                 preparedStatement.execute();
                 allSubjects.remove(subject);
+
+                DbManager.removeRemainingDataFromDB(
+                        "SELECT COMMENT_ID FROM ST58310.COMMENT_DISCUSSION " +
+                                "RIGHT JOIN THE_COMMENT ON COMMENT_DISCUSSION.THE_COMMENT_COMMENT_ID = THE_COMMENT.COMMENT_ID " +
+                                "WHERE COMMENT_ID IS NOT NULL AND THE_COMMENT_COMMENT_ID IS NULL",
+                        "DELETE FROM ST58310.THE_COMMENT WHERE COMMENT_ID = ?",
+                        CommentColumns.COMMENT_ID.toString());
+                DbManager.removeRemainingDataFromDB(
+                        "SELECT QUESTION_QUESTION_ID, QUESTION_ID FROM ST58310.QUIZZES_QUESTION " +
+                                "RIGHT JOIN QUESTION ON QUIZZES_QUESTION.QUESTION_QUESTION_ID = QUESTION.QUESTION_ID " +
+                                "WHERE QUESTION_ID IS NOT NULL AND QUESTION_QUESTION_ID IS NULL",
+                        "DELETE FROM ST58310.QUESTION WHERE QUESTION_ID = ?",
+                        QuestionColumns.QUESTION_ID.toString());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        if (allSubjects.isEmpty()){
+        if (allSubjects.isEmpty()) {
             changeDisable(true);
         }
     }
@@ -305,7 +298,7 @@ public class SubjectManagementController implements Initializable {
     @NotNull
     private Subject createSubject(@NotNull final ResultSet resultSet) throws SQLException {
         final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-        final String name = resultSet.getString(SubjectColumns.NAME.toString());
+        final String name = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
         final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
         final int credits = resultSet.getInt(SubjectColumns.CREDITS.toString());
         final int semester = resultSet.getInt(SubjectColumns.SEMESTER.toString());
@@ -316,7 +309,12 @@ public class SubjectManagementController implements Initializable {
 
     @FXML
     private void refreshList() {
-        allSubjects.removeAll(allSubjects);
+        allSubjects.clear();
         fillSubjectsListView(allSubjects);
+    }
+
+    @FXML
+    private void scroll(@NotNull ScrollEvent event) {
+        ((Spinner) event.getSource()).increment((int) event.getDeltaY() / 40);
     }
 }

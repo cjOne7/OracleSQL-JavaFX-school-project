@@ -42,6 +42,8 @@ public class StudentStudyMatController implements Initializable {
     @FXML
     private Button openDiscussionBtn;
     @FXML
+    private Button openQuizBtn;
+    @FXML
     private Button closeBtn;
     @FXML
     private ComboBox<String> subjectComboBox;
@@ -77,6 +79,7 @@ public class StudentStudyMatController implements Initializable {
         downloadFileBtn.setDisable(state);
         openMaterialBtn.setDisable(state);
         openDiscussionBtn.setDisable(state);
+        openQuizBtn.setDisable(state);
     }
 
     private int getSubjectId() {
@@ -115,6 +118,11 @@ public class StudentStudyMatController implements Initializable {
             CreateStudyMaterialsController.studyMatId = studyMaterial.getStudyMatId();
             OpenNewWindow.openNewWindow(fxmlFilePath, getClass(), false, title, new Image("/images/student_icon.png"));
         }
+    }
+
+    @FXML
+    private void openQuiz(ActionEvent event) {
+        openWindow("/fxmlfiles/userwindows/adminsfxmls/quizmanagement/QuizManagementWindow.fxml", "Quizzes window");
     }
 
     @FXML

@@ -39,7 +39,7 @@ public class ChangeUserSubjectController implements Initializable {
     private Button applyChangesBtn;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(final URL location, final ResourceBundle resources) {
         subjectsListView.setItems(subjects);
         subjectsListView.setStyle(StylesEnum.FONT_STYLE.getStyle());
 
@@ -49,14 +49,14 @@ public class ChangeUserSubjectController implements Initializable {
         }
     }
     private void fillUnwrittenSubjectsList() {
-        final String selectQuery = "SELECT NAME, ABBREVIATION, SUBJECT_ID FROM ST58310.SUBJECT WHERE SUBJECT_ID NOT IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
+        final String selectQuery = "SELECT SUBJECT_NAME, ABBREVIATION, SUBJECT_ID FROM ST58310.SUBJECT WHERE SUBJECT_ID NOT IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
         try {
             preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             preparedStatement.setInt(1, studentId);
             final ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-                final String name = resultSet.getString(SubjectColumns.NAME.toString());
+                final String name = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
                 final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
                 final Subject subject = new Subject(subjectId, name, abbreviation);
                 subjects.add(subject);
@@ -74,7 +74,7 @@ public class ChangeUserSubjectController implements Initializable {
         } else {
             try {
                 executeQuery("DELETE FROM ST58310.USER_SUBJECT WHERE SUBJECT_SUBJECT_ID = ? AND USER_USER_ID = ?", subjectId, studentId);
-                //эта строчка нужна, чтобы при удалении и последующем добавлении предметы перезаписывались, а не начали после первого же удаления просто записываться
+                //this line is necessary so that when you delete and then add items, they are overwritten, and not just written after the first deletion
                 subjectId = subject.getSubjectId();
                 executeQuery("INSERT INTO ST58310.USER_SUBJECT values(?,?)", subject.getSubjectId(), studentId);
 

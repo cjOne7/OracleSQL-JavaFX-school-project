@@ -3,7 +3,7 @@ package sample.dbtableclasses;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
-import sample.controllers.userwindows.teacherscontrollers.TeacherWindowController;
+import sample.controllers.MainWindowController;
 import sample.databasemanager.DbManager;
 import sample.enums.ElsaUserColumns;
 import sample.enums.Role;
@@ -95,19 +95,6 @@ public class User {
         this.userId = userId;
     }
 
-    public User(final String name,
-                final String surname,
-                final String email,
-                final int userId,
-                final String login) {
-        this(name, surname, email, userId);
-        this.login = login;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
     public String getLogin() {
         return login;
     }
@@ -136,16 +123,25 @@ public class User {
         this.password = password;
     }
 
-    @NotNull
-    public static ObservableList<User> fillStudentsList() throws SQLException {
-        final DbManager dbManager = new DbManager();
-        final ObservableList<User> students = FXCollections.observableArrayList();
+    public String getName() {
+        return name;
+    }
 
-        String selectQuery = "SELECT ELSA_USER.NAME, ELSA_USER.SURNAME, ELSA_USER.EMAIL, ELSA_USER.USER_ID, SUBJECT.SUBJECT_ID\n" +
+    public Blob getImage() {
+        return image;
+    }
+
+    @NotNull
+    public static ObservableList<UserSubject> fillStudentsList() throws SQLException {
+        final DbManager dbManager = new DbManager();
+        final ObservableList<UserSubject> students = FXCollections.observableArrayList();
+
+        //select all students and their written subjects and sort it
+        final String selectQuery = "SELECT ELSA_USER.NAME, ELSA_USER.SURNAME, ELSA_USER.EMAIL, ELSA_USER.USER_ID, SUBJECT.SUBJECT_ID, SUBJECT.SUBJECT_NAME, SUBJECT.ABBREVIATION\n" +
                 "FROM ELSA_USER\n" +
                 "INNER JOIN USER_SUBJECT ON (ELSA_USER.USER_ID = USER_SUBJECT.USER_USER_ID AND ROLE_ID = 2)\n" +
-                "INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = USER_SUBJECT.SUBJECT_SUBJECT_ID)";
-        PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
+                "INNER JOIN SUBJECT ON (SUBJECT.SUBJECT_ID = USER_SUBJECT.SUBJECT_SUBJECT_ID) ORDER BY ELSA_USER.SURNAME, ELSA_USER.NAME, SUBJECT.SUBJECT_NAME";
+        final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
         final List<UserSubject> userSubjects = new ArrayList<>();
         while (resultSet.next()) {
@@ -155,13 +151,17 @@ public class User {
             final String email = resultSet.getString(ElsaUserColumns.EMAIL.toString());
 
             final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-            final UserSubject userSubject = new UserSubject(new User(name, surname, email, userId), new Subject(subjectId));
+            final String subjectName = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
+            final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
+            //create an object and add to list
+            final UserSubject userSubject = new UserSubject(new User(name, surname, email, userId), new Subject(subjectId, subjectName, abbreviation));
             userSubjects.add(userSubject);
         }
 
-        String selectQuery1 = "SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?";
-        PreparedStatement preparedStatement1 = dbManager.getConnection().prepareStatement(selectQuery1);
-        preparedStatement1.setInt(1, TeacherWindowController.userId);
+        //select all subjects belonging to the current authorized user
+        final String selectQuery1 = "SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?";
+        final PreparedStatement preparedStatement1 = dbManager.getConnection().prepareStatement(selectQuery1);
+        preparedStatement1.setInt(1, MainWindowController.curUserId);
         resultSet = preparedStatement1.executeQuery();
         final List<Integer> teacherSubjectsId = new ArrayList<>();
         while (resultSet.next()) {
@@ -169,10 +169,11 @@ public class User {
             teacherSubjectsId.add(subjectId);
         }
 
+        //find matches
         for (int i = 0; i < teacherSubjectsId.size(); i++) {
             for (int j = 0; j < userSubjects.size(); j++) {
                 if (teacherSubjectsId.get(i) == userSubjects.get(j).getSubject().getSubjectId()) {
-                    students.add(userSubjects.get(j).getUser());
+                    students.add(userSubjects.get(j));
                 }
             }
         }

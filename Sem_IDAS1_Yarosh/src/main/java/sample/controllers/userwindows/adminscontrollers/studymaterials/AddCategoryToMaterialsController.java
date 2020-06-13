@@ -45,7 +45,7 @@ public class AddCategoryToMaterialsController implements Initializable {
         initializeListView(categoriesListView, categories);
         initializeListView(studyMatListView, studyMaterials);
         categoriesListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        String selectQuery = "SELECT STUDY_MATERIAL_ID, FILE_NAME, FILE_TYPE, CREATER, SUBJECT_SUBJECT_ID FROM ST58310.STY_MTRL";
+        String selectQuery = "SELECT STUDY_MATERIAL_ID, FILE_NAME, FILE_TYPE, CREATER, SUBJECT_SUBJECT_ID FROM ST58310.STY_MTRL ORDER BY SUBJECT_SUBJECT_ID";
         try {
             preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             resultSet = preparedStatement.executeQuery();

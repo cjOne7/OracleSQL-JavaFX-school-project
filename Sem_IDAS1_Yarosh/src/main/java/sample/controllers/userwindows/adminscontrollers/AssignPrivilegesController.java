@@ -71,9 +71,11 @@ public class AssignPrivilegesController implements Initializable {
             e.printStackTrace();
         }
 
+        //if user logged as ADMINISTRATOR
         if (roleID == Role.ADMINISTRATOR.getIndex()) {
             fillRoleComboBoxes(Role.ADMINISTRATOR, roleFilterComboBox, roleChangerComboBox);
             selectQuery = String.format("SELECT USER_ID, NAME, SURNAME, EMAIL, TELEPHONE, LOGIN, ROLE_ID from ST58310.ELSA_USER where ROLE_ID < %d", Role.MAIN_ADMIN.getIndex());
+            //if user logged as MAIN_ADMIN
         } else if (roleID == Role.MAIN_ADMIN.getIndex()) {
             fillRoleComboBoxes(Role.MAIN_ADMIN, roleFilterComboBox, roleChangerComboBox);
             selectQuery = "SELECT USER_ID, NAME, SURNAME, EMAIL, TELEPHONE, LOGIN, ROLE_ID from ST58310.ELSA_USER";
@@ -188,6 +190,7 @@ public class AssignPrivilegesController implements Initializable {
     private void refreshList(ActionEvent event) {
         users.clear();
         fillUsersListView(selectQuery);
+        //filter to match with combobox value
         final ObservableList<User> observableList = users.stream().filter(user -> user.getRoleId() == roleFilterComboBox.getValue().getIndex()).collect(Collectors.toCollection(FXCollections::observableArrayList));
         listViewWithNewUsers.setItems(observableList);
         if (users.size() >= 1) {
@@ -207,5 +210,7 @@ public class AssignPrivilegesController implements Initializable {
     }
 
     @FXML
-    private void close(ActionEvent event) { ((Stage) closeBtn.getScene().getWindow()).close(); }
+    private void close(ActionEvent event) {
+        ((Stage) closeBtn.getScene().getWindow()).close();
+    }
 }

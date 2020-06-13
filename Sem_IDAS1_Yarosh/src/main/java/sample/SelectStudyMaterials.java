@@ -21,7 +21,7 @@ public final class SelectStudyMaterials {
 
     private final DbManager dbManager = new DbManager();
 
-    @NotNull
+    @NotNull //return all study materials
     public ObservableList<StudyMaterial> getStudyMaterials() throws SQLException {
         final ObservableList<StudyMaterial> studyMaterials = FXCollections.observableArrayList();
         final String selectQuery = "SELECT * FROM ST58310.STY_MTRL ORDER BY FILE_NAME";
@@ -48,6 +48,7 @@ public final class SelectStudyMaterials {
         return new StudyMaterial(studyMatId, fileName, fileType, dateOfCreation, creater, numberOfPages, dateOfChanges, changer, description, subjectId);
     }
 
+    //download file to folder 'Downloads'
     public void downloadFile(final StudyMaterial studyMaterial) {
         if (studyMaterial == null) {
             Main.callAlertWindow("Warning", "Study material is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
@@ -58,8 +59,8 @@ public final class SelectStudyMaterials {
                 preparedStatement.setInt(1, studyMaterial.getStudyMatId());
                 final ResultSet resultSet = preparedStatement.executeQuery();
                 if (resultSet.next()) {
-                    final Blob blob = resultSet.getBlob(StudyMatColumns.THE_FILE.getColumnName());
-                    final File file = getFile(blob, studyMaterial.getFileName(), studyMaterial.getFileType());
+                    final Blob blob = resultSet.getBlob(StudyMatColumns.THE_FILE.getColumnName());//get Blob from db
+                    final File file = getFile(blob, studyMaterial.getFileName(), studyMaterial.getFileType());//convert Blob to file
                     if (file != null) {
                         Main.callAlertWindow("Information", "Chosen file has been downloaded! Its filepath: " + file.getPath(), Alert.AlertType.INFORMATION, "/images/information_icon.png");
                     }
@@ -87,7 +88,7 @@ public final class SelectStudyMaterials {
     }
 
     public void deleteMaterial(final StudyMaterial studyMaterial) {
-        if (studyMaterial == null) {
+        if (studyMaterial == null) {//if material is not choosen
             Main.callAlertWindow("Warning", "Study material is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
         } else {
             final String deleteQuery = "DELETE FROM ST58310.STY_MTRL WHERE STUDY_MATERIAL_ID = ?";

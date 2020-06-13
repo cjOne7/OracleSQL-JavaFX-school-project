@@ -1,0 +1,5 @@
+Button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: darkslateblue;
+    -fx-border-color: cornsilk;
+}

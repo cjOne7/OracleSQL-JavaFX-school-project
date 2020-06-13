@@ -15,30 +15,26 @@ import sample.databasemanager.DbManager;
 import sample.dbtableclasses.Subject;
 import sample.dbtableclasses.User;
 import sample.dbtableclasses.UserSubject;
-import sample.enums.ElsaUserColumns;
 import sample.enums.StylesEnum;
 import sample.enums.SubjectColumns;
-import sample.enums.UserSubjectColumns;
 
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class TeacherWindowController implements Initializable {
 
     private final DbManager dbManager = new DbManager();
 
-    private ObservableList<User> students = FXCollections.observableArrayList();
+    private ObservableList<UserSubject> students = FXCollections.observableArrayList();
     private final ObservableList<Subject> subjects = FXCollections.observableArrayList();
 
     public static int userId;
 
     @FXML
-    private ListView<User> studentsList;
+    private ListView<UserSubject> studentsList;
     @FXML
     private ListView<Subject> subjectListView;
     @FXML
@@ -49,13 +45,14 @@ public class TeacherWindowController implements Initializable {
         userId = MainWindowController.curUserId;
 
         try {
-            String selectQuery = "SELECT * FROM ST58310.SUBJECT WHERE SUBJECT_ID " +
+            //get all current teacher's subjects
+            final String selectQuery = "SELECT * FROM ST58310.SUBJECT WHERE SUBJECT_ID " +
                     "IN (SELECT SUBJECT_SUBJECT_ID FROM ST58310.USER_SUBJECT WHERE USER_USER_ID = ?)";
-            PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
+            final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             preparedStatement.setInt(1, userId);
             fillObservableList(preparedStatement.executeQuery(), subjects);
 
-            students = User.fillStudentsList();
+            students = User.fillStudentsList();//get students list who have the subjects in current teacher
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,7 +63,7 @@ public class TeacherWindowController implements Initializable {
     private void fillObservableList(@NotNull final ResultSet resultSet, final ObservableList<Subject> observableList) throws SQLException {
         while (resultSet.next()) {
             final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-            final String name = resultSet.getString(SubjectColumns.NAME.toString());
+            final String name = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
             final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
             final int credits = resultSet.getInt(SubjectColumns.CREDITS.toString());
             final int semester = resultSet.getInt(SubjectColumns.SEMESTER.toString());
@@ -98,4 +95,3 @@ public class TeacherWindowController implements Initializable {
         MainWindowController.openMainStage(logOutBtn);
     }
 }
-

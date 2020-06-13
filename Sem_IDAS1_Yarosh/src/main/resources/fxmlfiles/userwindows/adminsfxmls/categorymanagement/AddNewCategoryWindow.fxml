@@ -19,8 +19,11 @@
             <Font name="Castellar" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="categoryNameTextField" layoutX="176.0" layoutY="49.0" />
-      <Button fx:id="createCategoryBtn" layoutX="23.0" layoutY="232.0" mnemonicParsing="false" onAction="#createCategory" prefWidth="85.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="create">
+      <TextField fx:id="categoryNameTextField" layoutX="176.0" layoutY="49.0">
+         <font>
+            <Font name="Century Gothic" size="14.0" />
+         </font></TextField>
+      <Button layoutX="23.0" layoutY="232.0" mnemonicParsing="false" onAction="#createCategory" prefWidth="85.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="create">
          <font>
             <Font name="Castellar" size="14.0" />
          </font>
@@ -30,7 +33,10 @@
             <Font name="Castellar" size="14.0" />
          </font>
       </Button>
-      <TextArea fx:id="descriptionTextArea" layoutX="493.0" layoutY="52.0" prefHeight="192.0" prefWidth="211.0" wrapText="true" />
+      <TextArea fx:id="descriptionTextArea" layoutX="493.0" layoutY="52.0" prefHeight="192.0" prefWidth="211.0" wrapText="true">
+         <font>
+            <Font name="Century Gothic" size="14.0" />
+         </font></TextArea>
       <Label alignment="CENTER" layoutX="257.0" layoutY="9.0" prefHeight="30.0" prefWidth="211.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878; -fx-border-radius: 5; -fx-background-radius: 5;" text="create category">
          <font>
             <Font name="Castellar" size="14.0" />

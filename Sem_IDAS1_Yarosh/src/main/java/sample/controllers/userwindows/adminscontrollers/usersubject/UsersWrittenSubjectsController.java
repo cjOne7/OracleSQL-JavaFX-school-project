@@ -76,7 +76,7 @@ public class UsersWrittenSubjectsController implements Initializable {
 
     private void fillUserSubjectListView() {
         try {
-            final String selectQuery = "SELECT ELSA_USER.LOGIN, ELSA_USER.SURNAME, ELSA_USER.USER_ID, ELSA_USER.ROLE_ID, SUBJECT.NAME, SUBJECT.ABBREVIATION, SUBJECT.SUBJECT_ID " +
+            final String selectQuery = "SELECT ELSA_USER.LOGIN, ELSA_USER.SURNAME, ELSA_USER.USER_ID, ELSA_USER.ROLE_ID, SUBJECT.SUBJECT_NAME, SUBJECT.ABBREVIATION, SUBJECT.SUBJECT_ID " +
                     "FROM ELSA_USER " +
                     "INNER JOIN USER_SUBJECT ON ELSA_USER.USER_ID = USER_SUBJECT.USER_USER_ID " +
                     "INNER JOIN SUBJECT ON USER_SUBJECT.SUBJECT_SUBJECT_ID = SUBJECT.SUBJECT_ID " +
@@ -91,7 +91,7 @@ public class UsersWrittenSubjectsController implements Initializable {
                 final User user = new User(userSurname, userLogin, userId, roleId);
 
                 final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-                final String subjectName = resultSet.getString(SubjectColumns.NAME.toString());
+                final String subjectName = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
                 final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
                 final Subject subject = new Subject(subjectId, subjectName, abbreviation);
 
@@ -148,6 +148,7 @@ public class UsersWrittenSubjectsController implements Initializable {
         userSubjects.clear();
         fillUserSubjectListView();
         sortedList.clear();
+        //filter to match with combobox value
         filterValues(userSubject -> studentTeacherCombobox.getValue().getIndex() == userSubject.getUser().getRoleId());
         if (userSubjects.size() >= 1) {
             changeDisable(false);

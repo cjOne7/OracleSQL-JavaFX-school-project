@@ -31,7 +31,12 @@
             <Font name="Castellar" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="openDiscussionBtn" layoutX="619.0" layoutY="487.0" mnemonicParsing="false" onAction="#openDiscussion" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open discussion">
+      <Button fx:id="openDiscussionBtn" disable="true" layoutX="619.0" layoutY="487.0" mnemonicParsing="false" onAction="#openDiscussion" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open discussion">
+         <font>
+            <Font name="Castellar" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="openQuizBtn" disable="true" layoutX="619.0" layoutY="444.0" mnemonicParsing="false" onAction="#openQuiz" prefHeight="26.0" prefWidth="160.0" style="-fx-background-color: #f5f5dc; -fx-border-color: #50c878;" text="open quiz">
          <font>
             <Font name="Castellar" size="14.0" />
          </font>

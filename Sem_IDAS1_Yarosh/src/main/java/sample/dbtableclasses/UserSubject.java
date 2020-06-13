@@ -1,7 +1,5 @@
 package sample.dbtableclasses;
 
-import sample.enums.Role;
-
 public class UserSubject {
 
     private User user;
@@ -22,11 +20,10 @@ public class UserSubject {
 
     @Override
     public String toString() {
-        return "User's ID:" + user.getUserId()
-                + ", role: " + Role.getRole(user.getRoleId())
-                + ", surname: " + user.getSurname()
-                + ", login: " + user.getLogin()
-                + " has written the subject with ID: " + subject.getSubjectId()
-                + ", name: " + subject.getName() + "/" + subject.getAbbreviation();
+        return (user.getSurname() == null ? "" : "Surname: " + user.getSurname()) +
+                (user.getName() == null ? "" : ", name: " + user.getName()) +
+                (user.getLogin() == null ? "" : ", login: " + user.getLogin()) +
+                (subject.getName() == null ? "" : ", subject: " + subject.getName()) + "/" +
+                (subject.getAbbreviation() == null ? "" : subject.getAbbreviation());
     }
 }

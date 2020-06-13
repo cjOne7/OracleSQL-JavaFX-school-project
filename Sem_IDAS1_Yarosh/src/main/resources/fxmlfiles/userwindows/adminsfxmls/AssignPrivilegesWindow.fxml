@@ -32,7 +32,7 @@
             <Font name="Castellar" size="14.0" />
          </font>
       </Button>
-      <Button fx:id="watchProfileBtn" layoutX="970.0" layoutY="251.0" mnemonicParsing="false" onAction="#watchUserProfile" prefHeight="28.0" prefWidth="178.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="watch profile">
+      <Button fx:id="watchProfileBtn" disable="true" layoutX="970.0" layoutY="251.0" mnemonicParsing="false" onAction="#watchUserProfile" prefHeight="28.0" prefWidth="178.0" style="-fx-background-color: #F5F5DC; -fx-border-color: #50C878;" text="show profile">
          <font>
             <Font name="Castellar" size="14.0" />
          </font>

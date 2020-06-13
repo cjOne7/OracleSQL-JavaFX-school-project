@@ -57,20 +57,22 @@ public class AddUserSubjectController implements Initializable {
 
         studentTeacherCombobox.setStyle(StylesEnum.COMBO_BOX_STYLE.getStyle());
         final Role[] roles = {Role.STUDENT, Role.TEACHER};
-        studentTeacherCombobox.getItems().addAll(roles);
+        studentTeacherCombobox.getItems().addAll(roles);//add only 2 roles
 
         studentTeacherCombobox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            //filter values according to value in combobox
             sortedList = users.stream()
                     .filter(user -> newValue.getIndex() == user.getRoleId())
                     .collect(Collectors.toCollection(FXCollections::observableArrayList));
             usersListView.setItems(sortedList);
-            if (Role.STUDENT == newValue) {
+            if (Role.STUDENT == newValue) {//change Label text
                 titleLabel.setText("Student list");
             } else {
                 titleLabel.setText("Teacher list");
             }
         });
 
+        //fill users list
         String selectQuery = "SELECT USER_ID, NAME, SURNAME, LOGIN, ROLE_ID FROM ST58310.ELSA_USER WHERE ROLE_ID IN (?,?) ORDER BY ROLE_ID";
         try {
             preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
@@ -87,12 +89,13 @@ public class AddUserSubjectController implements Initializable {
                 users.add(student);
             }
 
-            selectQuery = "SELECT SUBJECT_ID, NAME, ABBREVIATION FROM ST58310.SUBJECT ORDER BY YEAR, SEMESTER";
+            //fill subjects list
+            selectQuery = "SELECT SUBJECT_ID, SUBJECT_NAME, ABBREVIATION FROM ST58310.SUBJECT ORDER BY YEAR, SEMESTER";
             preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-                final String name = resultSet.getString(SubjectColumns.NAME.toString());
+                final String name = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
                 final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
                 final Subject subject = new Subject(subjectId, name, abbreviation);
                 subjects.add(subject);
@@ -108,27 +111,30 @@ public class AddUserSubjectController implements Initializable {
         listView.setStyle(StylesEnum.FONT_STYLE.getStyle());
     }
 
+    //change color according to written subjects by user
     private void colorizeSubjectsListView() {
         final User user = usersListView.getSelectionModel().getSelectedItem();
         final ObservableList<Subject> subjects = FXCollections.observableArrayList();
         if (user == null) {
             Main.callAlertWindow("Warning", "Student is not selected!", Alert.AlertType.WARNING, "/images/warning_icon.png");
         } else {
-            final String selectQuery = "select NAME, ABBREVIATION, SUBJECT_ID from ST58310.SUBJECT where SUBJECT_ID in (select SUBJECT_SUBJECT_ID from ST58310.USER_SUBJECT where USER_USER_ID = ?) ORDER BY YEAR, SEMESTER";
+            //get subjects list
+            final String selectQuery = "select SUBJECT_NAME, ABBREVIATION, SUBJECT_ID from ST58310.SUBJECT where SUBJECT_ID in (select SUBJECT_SUBJECT_ID from ST58310.USER_SUBJECT where USER_USER_ID = ?) ORDER BY YEAR, SEMESTER";
             try {
                 preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
                 preparedStatement.setInt(1, user.getUserId());
                 final ResultSet resultSet = preparedStatement.executeQuery();
                 while (resultSet.next()) {
                     final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-                    final String name = resultSet.getString(SubjectColumns.NAME.toString());
+                    final String subjectName = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
                     final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
-                    final Subject subject = new Subject(subjectId, name, abbreviation);
+                    final Subject subject = new Subject(subjectId, subjectName, abbreviation);
                     subjects.add(subject);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            //find identical indexes in listView
             final List<Integer> indexes = new ArrayList<>();
             for (int i = 0; i < subjects.size(); i++) {
                 for (int j = 0; j < this.subjects.size(); j++) {
@@ -178,6 +184,7 @@ public class AddUserSubjectController implements Initializable {
                         notAddedSubjects.add(value);
                     }
                 }
+                //if user writes only unwritten earlier subjects
                 if (addedIndex == subjects.size()) {
                     Main.callAlertWindow("Successful adding", "The new record has been added successfully!", Alert.AlertType.INFORMATION, "/images/information_icon.png");
                 } else {
@@ -192,6 +199,7 @@ public class AddUserSubjectController implements Initializable {
             }
         }
         colorizeSubjectsListView();
+        subjectsListView.getSelectionModel().clearSelection();
     }
 
     @FXML

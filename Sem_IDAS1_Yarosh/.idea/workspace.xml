@@ -39,21 +39,14 @@
         <item name="ST58310: schema" type="3abd1b6a:OraImplModel$Schema" />
         <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
       </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="@fei-sql1.upceucebny.cz" type="feb32156:DbDataSourceImpl" />
-        <item name="ST58310: schema" type="3abd1b6a:OraImplModel$Schema" />
-        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
-        <item name="THE_COMMENT: table" type="942f455b:OraImplModel$Table" />
-      </path>
     </expand>
     <select />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
         <option value="Enum" />
+        <option value="FxmlFile" />
         <option value="Class" />
       </list>
     </option>
@@ -78,23 +71,23 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/sample" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.3632184" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows" />
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\adminsfxmls" />
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\discussionfxmls" />
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows\teachersfxmls" />
-      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows\studentsfxmls" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\java\sample" />
       <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows\adminsfxmls\quizmanagement\questionmanagement" />
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows\adminsfxmls\quizmanagement" />
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\userwindows" />
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\adminsfxmls" />
+      <recent name="D:\nikita\JavaProjectsNB\IDAS1_Sem_Yarosh\Sem_IDAS1_Yarosh\src\main\resources\fxmlfiles\discussionfxmls" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -193,7 +186,14 @@
       <workItem from="1591698666485" duration="896000" />
       <workItem from="1591702059573" duration="6901000" />
       <workItem from="1591720649368" duration="17420000" />
-      <workItem from="1591782587241" duration="14007000" />
+      <workItem from="1591782587241" duration="33369000" />
+      <workItem from="1591879731739" duration="32726000" />
+      <workItem from="1591963579762" duration="3103000" />
+      <workItem from="1591968289179" duration="600000" />
+      <workItem from="1591973976787" duration="4331000" />
+      <workItem from="1591978976450" duration="14592000" />
+      <workItem from="1592051571721" duration="9239000" />
+      <workItem from="1592062375065" duration="13702000" />
     </task>
     <servers />
   </component>
@@ -217,10 +217,14 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="361" y="71" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1591394502702" />
-    <state x="566" y="58" width="459" height="647" key="#com.intellij.ide.util.MemberChooser" timestamp="1591783901953">
+    <state x="517" y="215" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1591978510915">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="566" y="58" width="459" height="647" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1591783901953" />
+    <state x="517" y="215" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.824@0.0.1536.824" timestamp="1591978510915" />
+    <state x="566" y="58" width="459" height="647" key="#com.intellij.ide.util.MemberChooser" timestamp="1592077112428">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="566" y="58" width="459" height="647" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1592077112428" />
     <state x="542" y="186" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1591043803857">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -233,14 +237,18 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="566" y="272" width="403" height="287" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1536.824@0.0.1536.824" timestamp="1591289361932" />
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1591699204719">
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1591911650590">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1591699204719" />
-    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1591732981430">
+    <state x="0" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1591911650590" />
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1591887887173">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1591732981430" />
+    <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1591887887173" />
+    <state x="499" y="159" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1591821127302">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="499" y="159" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.0.1536.824@0.0.1536.824" timestamp="1591821127302" />
     <state x="499" y="167" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1591288968506">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -253,79 +261,69 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="591" y="311" key="Github.CreateGistDialog/0.0.1536.824@0.0.1536.824" timestamp="1591711077203" />
-    <state width="1493" height="185" key="GridCell.Tab.0.bottom" timestamp="1591797829619">
+    <state width="1493" height="169" key="GridCell.Tab.0.bottom" timestamp="1592081168682">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="185" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591797829619" />
-    <state width="1493" height="185" key="GridCell.Tab.0.center" timestamp="1591797829619">
+    <state width="1493" height="169" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1592081168682" />
+    <state width="1493" height="169" key="GridCell.Tab.0.center" timestamp="1592081168682">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="185" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1591797829619" />
-    <state width="1493" height="185" key="GridCell.Tab.0.left" timestamp="1591797829619">
+    <state width="1493" height="169" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1592081168682" />
+    <state width="1493" height="169" key="GridCell.Tab.0.left" timestamp="1592081168682">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="185" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1591797829619" />
-    <state width="1493" height="185" key="GridCell.Tab.0.right" timestamp="1591797829619">
+    <state width="1493" height="169" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1592081168682" />
+    <state width="1493" height="169" key="GridCell.Tab.0.right" timestamp="1592081168682">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="185" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1591797829619" />
-    <state width="1493" height="195" key="GridCell.Tab.1.bottom" timestamp="1591788469875">
+    <state width="1493" height="169" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1592081168682" />
+    <state width="1493" height="194" key="GridCell.Tab.1.bottom" timestamp="1591997802763">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="195" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591788469875" />
-    <state width="1493" height="195" key="GridCell.Tab.1.center" timestamp="1591788469875">
+    <state width="1493" height="194" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1591997802763" />
+    <state width="1493" height="194" key="GridCell.Tab.1.center" timestamp="1591997802763">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="195" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1591788469875" />
-    <state width="1493" height="195" key="GridCell.Tab.1.left" timestamp="1591788469875">
+    <state width="1493" height="194" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1591997802763" />
+    <state width="1493" height="194" key="GridCell.Tab.1.left" timestamp="1591997802763">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="195" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1591788469875" />
-    <state width="1493" height="195" key="GridCell.Tab.1.right" timestamp="1591788469875">
+    <state width="1493" height="194" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1591997802763" />
+    <state width="1493" height="194" key="GridCell.Tab.1.right" timestamp="1591997802763">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="195" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1591788469875" />
-    <state x="249" y="0" key="SettingsEditor" timestamp="1591450219666">
+    <state width="1493" height="194" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1591997802763" />
+    <state x="249" y="0" key="SettingsEditor" timestamp="1591801394037">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1591450219666" />
+    <state x="249" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1591801394037" />
     <state x="584" y="190" key="chooseDestDirectoryDialog" timestamp="1590622635060">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="584" y="190" key="chooseDestDirectoryDialog/0.0.1536.824@0.0.1536.824" timestamp="1590622635060" />
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1591783480189">
+    <state x="485" y="54" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog" timestamp="1591965368566">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1591783480189" />
+    <state x="485" y="54" key="com.intellij.database.view.ui.AbstractDbRefactoringDialog/0.0.1536.824@0.0.1536.824" timestamp="1591965368566" />
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog" timestamp="1592062376104">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="465" y="236" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1592062376104" />
     <state x="209" y="108" key="new project wizard" timestamp="1591377062454">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="209" y="108" key="new project wizard/0.0.1536.824@0.0.1536.824" timestamp="1591377062454" />
-    <state x="475" y="31" key="refactoring.ChangeSignatureDialog" timestamp="1591566215152">
+    <state x="475" y="31" key="refactoring.ChangeSignatureDialog" timestamp="1591820060861">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="475" y="31" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1591566215152" />
-    <state x="425" y="187" key="run.anything.popup" timestamp="1591544530155">
+    <state x="475" y="31" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1591820060861" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1591888029137">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1591544530155" />
-    <state x="425" y="66" width="672" height="676" key="search.everywhere.popup" timestamp="1591458891312">
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1591888029137" />
+    <state x="425" y="66" width="672" height="676" key="search.everywhere.popup" timestamp="1592057388875">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="425" y="66" width="672" height="676" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1591458891312" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/controllers/userwindows/adminscontrollers/categorymanagement/StudyMatCategoryController.java</url>
-          <line>111</line>
-          <properties class="sample.controllers.userwindows.adminscontrollers.categorymanagement.StudyMatCategoryController" method="checkDisable">
-            <option name="EMULATED" value="true" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <state x="425" y="66" width="672" height="676" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1592057388875" />
   </component>
 </project>

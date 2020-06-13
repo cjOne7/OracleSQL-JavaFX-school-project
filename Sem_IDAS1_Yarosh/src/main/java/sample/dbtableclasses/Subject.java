@@ -1,6 +1,5 @@
 package sample.dbtableclasses;
 
-
 import org.jetbrains.annotations.NotNull;
 import sample.databasemanager.DbManager;
 import sample.enums.SubjectColumns;
@@ -69,13 +68,13 @@ public class Subject {
     @NotNull
     public static List<Subject> getAllSubjectList() throws SQLException {
         final DbManager dbManager = new DbManager();
-        final String selectQuery = "SELECT SUBJECT_ID, NAME, ABBREVIATION FROM ST58310.SUBJECT ORDER BY YEAR, SEMESTER";
+        final String selectQuery = "SELECT SUBJECT_ID, SUBJECT_NAME, ABBREVIATION FROM ST58310.SUBJECT ORDER BY YEAR, SEMESTER";
         final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
         final ResultSet resultSet = preparedStatement.executeQuery();
         final List<Subject> subjectList = new ArrayList<>();
         while (resultSet.next()) {
             final int subjectId = resultSet.getInt(SubjectColumns.SUBJECT_ID.toString());
-            final String subjectName = resultSet.getString(SubjectColumns.NAME.toString());
+            final String subjectName = resultSet.getString(SubjectColumns.SUBJECT_NAME.toString());
             final String abbreviation = resultSet.getString(SubjectColumns.ABBREVIATION.toString());
             final Subject subject = new Subject(subjectId, subjectName, abbreviation);
             subjectList.add(subject);

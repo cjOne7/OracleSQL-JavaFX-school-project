@@ -3,14 +3,13 @@ package sample.controllers.userwindows.adminscontrollers.categorymanagement;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
-import sample.Shake;
+import sample.Checker;
+import sample.Cosmetic;
+import sample.TextConstraint;
 import sample.databasemanager.DbManager;
 import sample.dbtableclasses.Category;
 import sample.enums.CategoryColumns;
@@ -23,10 +22,11 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ResourceBundle;
 
+import static sample.Cosmetic.changeLabelAttributes;
+
 public class ChangeCategoryController implements Initializable {
 
     private final DbManager dbManager = new DbManager();
-    private PreparedStatement preparedStatement;
     private Category category;
 
     @FXML
@@ -42,11 +42,9 @@ public class ChangeCategoryController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-
         final String selectQuery = "SELECT * from ST58310.CATEGORY where CATEGORY_ID = ?";
         try {
-            preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
+            final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(selectQuery);
             preparedStatement.setInt(1, StudyMatCategoryController.categoryId);
             final ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -60,18 +58,15 @@ public class ChangeCategoryController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    private void changeLabelAttributes(@NotNull final Label label, final String text, final Color textColor) {
-        label.setText(text);
-        label.setTextFill(textColor);
+        categoryNameTextField.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(50)));
+        descriptionTextArea.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(500)));
     }
 
     @FXML
     private void changeCategory(ActionEvent event) {
         final String categoryName = categoryNameTextField.getText();
         if (categoryName == null || categoryName.trim().isEmpty()) {
-            Shake.shake(categoryNameTextField);
+            Cosmetic.shake(categoryNameTextField);
             categoryNameTextField.setStyle(StylesEnum.ERROR_STYLE.getStyle());
             changeLabelAttributes(messageLabel, "Fields with * have to be filled!", Color.RED);
         } else {
@@ -79,14 +74,10 @@ public class ChangeCategoryController implements Initializable {
                 if (checkNameForUnique()) {
                     final String updateQuery = "UPDATE ST58310.CATEGORY SET CATEGORY_NAME = ?, DESCRIPTION = ? WHERE CATEGORY_ID = ?";
                     final PreparedStatement preparedStatement = dbManager.getConnection().prepareStatement(updateQuery);
-                    preparedStatement.setString(CategoryColumns.CATEGORY_NAME.getColumnIndex(), categoryName.trim());
+                    preparedStatement.setString(1, categoryName.trim());
                     final String description = descriptionTextArea.getText();
-                    if (description == null || description.trim().isEmpty()) {
-                        preparedStatement.setNull(CategoryColumns.DESCRIPTION.getColumnIndex(), Types.NULL);
-                    } else {
-                        preparedStatement.setString(CategoryColumns.DESCRIPTION.getColumnIndex(), description.trim());
-                    }
-                    preparedStatement.setInt(CategoryColumns.CATEGORY_ID.getColumnIndex(), StudyMatCategoryController.categoryId);
+                    Checker.checkTextField(description == null || description.trim().isEmpty(), 2, description, preparedStatement);
+                    preparedStatement.setInt(3, StudyMatCategoryController.categoryId);
                     preparedStatement.execute();
                     ((Stage) createCategoryBtn.getScene().getWindow()).close();
                 }
@@ -97,25 +88,18 @@ public class ChangeCategoryController implements Initializable {
     }
 
     private boolean checkNameForUnique() throws SQLException {
-        final String categoryName = categoryNameTextField.getText();
-        if (categoryName != null && !categoryName.trim().equalsIgnoreCase(category.getCategoryName())) {
-            final String selectQuery = "SELECT CATEGORY_NAME FROM ST58310.CATEGORY WHERE UPPER(CATEGORY_NAME) LIKE UPPER(?)";
-            final PreparedStatement checkSelection = dbManager.getConnection().prepareStatement(selectQuery);
-            checkSelection.setString(1, categoryName);
-            final ResultSet loginFields = checkSelection.executeQuery();
-            if (loginFields.next()) {
-                changeLabelAttributes(messageLabel, "Category name must be unique!", Color.RED);
-                categoryNameTextField.setStyle(StylesEnum.ERROR_STYLE.getStyle());
-                Shake.shake(categoryNameTextField);
-                return false;
-            } else {
-                return true;
-            }
-        } else {
+        final String categoryName = categoryNameTextField.getText().trim();
+        if (categoryName.equalsIgnoreCase(category.getCategoryName())) {
             return true;
+        } else {
+            return Checker.checkForUnique(categoryNameTextField,
+                    "SELECT CATEGORY_NAME FROM ST58310.CATEGORY WHERE UPPER(CATEGORY_NAME) LIKE UPPER(?)",
+                    messageLabel, categoryName, "Category name must be unique!");
         }
     }
 
     @FXML
-    private void close(ActionEvent event) { ((Stage) closeBtn.getScene().getWindow()).close(); }
+    private void close(ActionEvent event) {
+        ((Stage) closeBtn.getScene().getWindow()).close();
+    }
 }

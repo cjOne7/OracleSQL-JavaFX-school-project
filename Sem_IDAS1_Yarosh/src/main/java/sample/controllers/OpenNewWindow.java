@@ -3,20 +3,13 @@ package sample.controllers;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import sample.enums.StylesEnum;
 
 import java.io.IOException;
-import java.sql.Statement;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,7 +25,7 @@ public final class OpenNewWindow {
             final String title,
             final Image iconImage) {
         try {
-            final Parent root = FXMLLoader.load(cl.getResource(fxmlFile));
+            final Parent root = FXMLLoader.load(cl.getResource(fxmlFile));//load fxml file
             configureStage(root, title, resizable, iconImage);
         } catch (IOException ex) {
             Logger.getLogger(cl.getName()).log(Level.SEVERE, null, ex);
@@ -44,26 +37,11 @@ public final class OpenNewWindow {
                                        final boolean resizable,
                                        final Image iconImage) {
         final Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-
-//        stage.setOnCloseRequest((event) -> {
-//            final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-//            alert.setTitle("Exiting");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Are you sure that you want to close this window?");
-//            final Stage stage1 = (Stage) alert.getDialogPane().getScene().getWindow();
-//            stage1.getIcons().add(new Image("/images/exit_icon.png"));
-//            final Optional<ButtonType> op = alert.showAndWait();
-//            if (op.get().equals(ButtonType.OK)) {
-//                stage.close();
-//            } else {
-//                event.consume();
-//            }
-//        });
+        stage.setScene(new Scene(root));//set scene
         stage.initStyle(StageStyle.DECORATED);
         stage.setResizable(resizable);
         stage.setTitle(title);
-        stage.getIcons().add(iconImage);
+        stage.getIcons().add(iconImage);//add image to the corner
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
     }

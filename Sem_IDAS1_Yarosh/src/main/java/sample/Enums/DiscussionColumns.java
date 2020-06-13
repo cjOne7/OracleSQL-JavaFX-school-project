@@ -1,6 +1,6 @@
 package sample.enums;
 
-public enum  DiscussionColumns {
+public enum DiscussionColumns {
     TITLE(1),
     DISCUSSION_ID(2),
     DISCUSSION_CREATER_ID(3),
@@ -12,5 +12,7 @@ public enum  DiscussionColumns {
         this.columnIndex = columnIndex;
     }
 
-    public int getColumnIndex() { return columnIndex; }
+    public int getColumnIndex() {
+        return columnIndex;
+    }
 }

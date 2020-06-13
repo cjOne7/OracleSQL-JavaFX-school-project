@@ -3,18 +3,17 @@ package sample.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.geometry.Side;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
+import sample.TextConstraint;
 import sample.databasemanager.DbManager;
 import sample.enums.ElsaUserColumns;
 import sample.enums.Role;
-import sample.Shake;
+import sample.Cosmetic;
 import sample.enums.StylesEnum;
 
 import java.net.URL;
@@ -23,6 +22,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.UnaryOperator;
+
+import static sample.Checker.checkTextField;
 
 public class MainWindowController implements Initializable {
 
@@ -44,21 +46,25 @@ public class MainWindowController implements Initializable {
         loginTextField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(loginTextField));
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> changeTextFieldStyle(passwordField));
 
+        loginTextField.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(64)));
+        passwordField.setTextFormatter(new TextFormatter<String>(TextConstraint.getDenyChange(50)));
+
 //        loginTextField.setText("cj_one1");//new user
 //        passwordField.setText("123");
 //        loginTextField.setText("cj_one2");//student
 //        passwordField.setText("123");
-        loginTextField.setText("cj_one4");//teacher
+//        loginTextField.setText("cj_one4");//teacher
+//        passwordField.setText("123");
+        loginTextField.setText("nikyarosh07@gmail.com");//admin
         passwordField.setText("123");
-//        loginTextField.setText("nikyarosh07@gmail.com");//admin
-//        passwordField.setText("Rfhnjirf258");
     }
 
     @FXML
     private void logIn(ActionEvent event) {
-        if (checkLoginFieldForEmpty() || checkPasswordFieldForEmpty()) {
-            checkIncomingField(checkLoginFieldForEmpty(), loginTextField);
-            checkIncomingField(checkPasswordFieldForEmpty(), passwordField);
+        //check login and password fields, they must be not empty
+        if (checkTextField(loginTextField) || checkTextField(passwordField)) {
+            checkIncomingField(checkTextField(loginTextField), loginTextField);
+            checkIncomingField(checkTextField(passwordField), passwordField);
         } else {
             final String login = loginTextField.getText().trim();
             final String password = passwordField.getText();
@@ -87,8 +93,8 @@ public class MainWindowController implements Initializable {
                             break;
                     }
                 } else {
-                    checkIncomingField(StylesEnum.ERROR_STYLE.getStyle(), loginTextField);
-                    checkIncomingField(StylesEnum.ERROR_STYLE.getStyle(), passwordField);
+                    checkIncomingField(StylesEnum.ERROR_STYLE.getStyle(), loginTextField, "Login or password are wrong!");
+                    checkIncomingField(StylesEnum.ERROR_STYLE.getStyle(), passwordField, "Login or password are wrong!");
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -96,8 +102,8 @@ public class MainWindowController implements Initializable {
         }
     }
 
-    private void closeCurAndOpenNewStage(final Button button, final String filePath, final String title, final String imagePath){
-        closeStage(button);
+    private void closeCurAndOpenNewStage(@NotNull final Button button, final String filePath, final String title, final String imagePath) {
+        ((Stage) button.getScene().getWindow()).close();
         OpenNewWindow.openNewWindow(filePath, getClass(), false, title, new Image(imagePath));
     }
 
@@ -110,43 +116,23 @@ public class MainWindowController implements Initializable {
             final boolean checkResult,
             final TextField textField) {
         if (checkResult) {
-            textField.setStyle(StylesEnum.ERROR_STYLE.getStyle());
-            Shake.shake(textField);
-            decorateErrorLabel("Empty fields");
+            checkIncomingField(StylesEnum.ERROR_STYLE.getStyle(), textField, "Empty fields");
         }
     }
 
-    private void checkIncomingField(final String style, @NotNull final TextField textField) {
+    private void checkIncomingField(final String style, @NotNull final TextField textField, final String text) {
         textField.setStyle(style);
-        Shake.shake(textField);
-        decorateErrorLabel("Login or password are wrong!");
-    }
-
-    private void decorateErrorLabel(final String labelText) {
-        loginErrorMessage.setText(labelText);
-        loginErrorMessage.setTextFill(Color.RED);
-    }
-
-    private boolean checkLoginFieldForEmpty() {
-        return loginTextField.getText().trim().isEmpty();
-    }
-
-    private boolean checkPasswordFieldForEmpty() {
-        return passwordField.getText().trim().isEmpty();
+        Cosmetic.shake(textField);
+        Cosmetic.changeLabelAttributes(loginErrorMessage, text, Color.RED);
     }
 
     private void changeTextFieldStyle(@NotNull final TextField textField) {
         textField.setStyle(StylesEnum.EMPTY_STRING.getStyle());
-        decorateErrorLabel(StylesEnum.EMPTY_STRING.getStyle());
-    }
-
-    private static void closeStage(@NotNull final Button button) {
-        final Stage stage = (Stage) button.getScene().getWindow();
-        stage.close();
+        Cosmetic.changeLabelAttributes(loginErrorMessage, StylesEnum.EMPTY_STRING.getStyle(), Color.BLACK);
     }
 
     public static void openMainStage(@NotNull final Button button) {
-        closeStage(button);
+        ((Stage) button.getScene().getWindow()).close();
         OpenNewWindow.openNewWindow("/fxmlfiles/MainWindow.fxml", MainWindowController.class, false, "Exiting window", new Image("/images/list.png"));
     }
 }
